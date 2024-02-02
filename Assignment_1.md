@@ -38,12 +38,12 @@ dict<num,dict<num,num>> d2 = [2:[3:4,4:5], 0:[1:2, 2:3]]
 Functions:
 ```codesangam
 d[key] = “Camel”  		//if str
-d[key] = 2346 				//if num/bool
-d.keys()					    //returns a list of keys
-d.pop(key)					  //remove the given key-value pair
-d.val()					      //returns a list of values
+d[key] = 2346 			//if num/bool
+d.keys()				//returns a list of keys
+d.pop(key)				//remove the given key-value pair
+d.val()					//returns a list of values
 dict d3 = d.copy()		//makes a copy of dictionary
-d.len()					      //returns the number of keys
+d.len()					//returns the number of keys
 ```
 
 ### List
@@ -52,16 +52,16 @@ list<str> l = [“Hirva”, “Disha”, “Dhruv”, “Shubh”]
 ```
 Functions: 
 ```codesangam
-l.append(123)			  //if num/bool/var
+l.append(123)			//if num/bool/var
 l.append(“str”)			//if str
 l.insert([0],24)		//inserts 24 at 1st position
-l.join(l2)				  //adds l2 after of l
+l.join(l2)				//adds l2 after of l
 num x  = sum(l)			//returns sum if list datatype is num
-l.len()				      //returns the size of l
-l.count(1)				  //counts the occurrences of 1
-l.index(4)				  //returns element at 5th position
-l.slice(1:5)			  //takes 2nd, 3rd, 4th and 5th element
-l.index(34) 			  //returns the first occurrence index of 34
+l.len()				    //returns the size of l
+l.count(1)				//counts the occurrences of 1
+l.index(4)				//returns element at 5th position
+l.slice(1:5)			//takes 2nd, 3rd, 4th and 5th element
+l.index(34)				//returns the first occurrence index of 34
 ```
 
 ### Tuple 
@@ -71,10 +71,10 @@ tup<num> t = [12,0,79]        (tuple can only contain one type of datatype)
 ```
 Functions:
 ```codesangam
-t.count(1)				//counts occurrences of 1
+t.count(1)			  //counts occurrences of 1
 t.index(43)			  //returns index of 43
-t.len()				    //returns the length of the tuple
-t(3) 					    //accesses 4th element
+t.len()				  //returns the length of the tuple
+t(3) 				  //accesses 4th element
 ```
 
 ### Array
@@ -84,36 +84,36 @@ arr<num> b[3]				creates an array of length 3 containing zeros
 ```
 Functions:
 ```codesangam
-a.len()				                  //returns length of array
-a.count(3)				              //counts frequency of 3 in arrays
-a.index(56)			                //returns index of first 56 in array or else returns -1
-arr<num> b[1] = a.slice(1:2)    //stores array with elements on index 1 in b
-a.(2)					                  //accesses third element of array 
+a.len()				                 //returns length of array
+a.count(3)				             //counts frequency of 3 in arrays
+a.index(56)			                 //returns index of first 56 in array or else returns -1
+arr<num> b[1] = a.slice(1:2)         //stores array with elements on index 1 in b
+a.(2)					             //accesses third element of array 
 ```
 
 ## Operators
 Number Operations: 
 ```codesangam
-num x			      //garbage values
+num x			//garbage values
 y = int(x)	    //will assign integer value of x to y, the datatype will remain num
 x = y+z         //addition
 x = y*z         //multiplication
 x = y-z         //subtraction
 x = y/z         //division
 x += y          //unary operator
-x = y//z		    //integer divide
-x = y**2		    //exponent (raised to the power 2) 
-x = y%z		      //returns remainder
-x++			        //pre increment			
-x—-              //pre decrement
-++x              //post increment
-—-x              //post decrement
+x = y//z		//integer divide
+x = y**2		//exponent (raised to the power 2) 
+x = y%z		    //returns remainder
+x++			    //pre increment			
+x—-             //pre decrement
+++x             //post increment
+—-x             //post decrement
 ```                             
 Logical Operators:
 ```codesangam
 &&			  //and
 ||			  //or 
-~ or !		//not
+~ or !        //not
 ```	
 Bitwise Operations:
 ```codesangam
