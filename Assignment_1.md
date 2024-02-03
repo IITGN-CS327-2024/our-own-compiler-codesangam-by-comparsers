@@ -13,7 +13,7 @@
 
 ## Definition of Different Data Types
 
-Variable names must start from an alphabet and can contain only alphanumeric characters and underscore (`_`).
+Variable names must start from an alphabet and can contain only alphabet characters and underscore (`_`). Also the name should not include any keyword.
 We are hosting three different datatypes:
 - Number (int and float): `num`
 - Boolean: `bool`
@@ -59,9 +59,9 @@ l.join(l2)				//adds l2 after of l
 num x  = sum(l)			//returns sum if list datatype is num
 l.len()				    //returns the size of l
 l.count(1)				//counts the occurrences of 1
-l.index(4)				//returns element at 5th position
+l.access(4)				//returns element at 5th position
 l.slice(1:5)			//takes 2nd, 3rd, 4th and 5th element
-l.index(34)				//returns the first occurrence index of 34
+l.pop(5)				//removes the 5-indexed element from the list  
 ```
 
 ### Tuple 
@@ -72,24 +72,9 @@ tup<num> t = [12,0,79]        (tuple can only contain one type of datatype)
 Functions:
 ```codesangam
 t.count(1)			  //counts occurrences of 1
-t.index(43)			  //returns index of 43
+t.access(1)			  //access 1-indexed element
 t.len()				  //returns the length of the tuple
-t(3) 				  //accesses 4th element
-```
-
-### Array
-```codesangam
-arr<num> a[3] = [12, 34, 56, 78]
-arr<num> b[3]				creates an array of length 3 containing zeros
-```
-Functions:
-```codesangam
-a.len()				                 //returns length of array
-a.count(3)				             //counts frequency of 3 in arrays
-a.index(56)			                 //returns index of first 56 in array or else returns -1
-arr<num> b[1] = a.slice(1:2)         //stores array with elements on index 1 in b
-a.(2)					             //accesses third element of array 
-```
+```  
 
 ## Operators
 Number Operations: 
@@ -234,6 +219,6 @@ warna:
 ```
 
 ## Comments
-Add  `//` before every line to consider it as a comment line.
+Add  `$$` before every line to consider it as a comment line.
 
-For multi line comment, add `/*` at start and `*/` at end of the comment.
+For multi line comment, add `$#` at start and `#$` at end of the comment.
