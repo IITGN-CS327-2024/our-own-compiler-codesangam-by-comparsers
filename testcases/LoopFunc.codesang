@@ -1,0 +1,28 @@
+$$ Test program for loops and function in CodeSangam
+
+karya bool isPass(num marks):
+    agar (marks > 80):
+        print("Pass")
+        vapas Sahi
+    magar (marks > 30 && marks <= 80):
+        print("Re-exam")
+        vapas Sahi
+    nahitoh:
+        print("Fail")
+        vapas Galat
+
+num main():
+    num count = 0
+    keliye (num i = 1; i < 5; i++, j++):
+        print("Iteration: ", i)
+        count += 1
+
+    count=0
+    jabtak (count < 3):
+        print("Count: ", count)
+        count += 1
+
+    $$ Function call
+    bool result = isPass(75)
+    
+    vapas 0
