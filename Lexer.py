@@ -14,7 +14,7 @@ class Lexer:
                 file_contents = file.read()
         except FileNotFoundError:
             print(f"File not found: {self.file_path}")
-        except Exception as e:
+        except Exception as e: 
             print(f"An error occurred: {e}")
 
         file_lines = file_contents.splitlines()
@@ -32,8 +32,10 @@ class Lexer:
             line = Line(line_number, single_line, comment_continue)
             comment_continue = line.comment_on
             line_number+=1
+            if line.error != "":
+                print("ERROR:", line.error)
+                break
             result.append(line)
-
 
     def print_lexemes(self):
         for line in self.lines:

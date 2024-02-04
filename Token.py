@@ -3,7 +3,3 @@ class Token:
         self.content = content
         self.type = type
         self.parent_type = parent_type
-    
-    def print(self):
-        #Print the information of the token in a particular format.
-        return 

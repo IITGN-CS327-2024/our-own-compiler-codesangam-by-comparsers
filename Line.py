@@ -2,8 +2,8 @@ from Token import *
 from TokenClass import *
 
 KeyWords = {
-    "in": TokenClass.IN
-    "num": TokenClass.NUM
+    "in": TokenClass.IN,
+    "num": TokenClass.NUM,
     "str": TokenClass.STR
 }
 
@@ -17,15 +17,23 @@ class Line:
         self.indentation = 0
         self.find_indentation()
         self.length = len(line_content)
+        self.error = ""
         self.scan_tokens()
     
     def print_lexemes(self):
-        #Print in requried format
+        print("line",self.line_number,"indent block",self.indentation,end=": ")
+        for token in self.token_list:
+            print("<",token.content,",",token.type,",",token.parent_type,">",end=", ")
+        print()
 
     def find_indentation(self):
-        #Find the indentation of line
-        #change start where the content starts after indentation
-        #change current as start
+        char = self.advance()
+        while char==' ' or char=='\t':
+            if char==' ':
+                self.indentation+=1
+            else:
+                self.indentation+=4
+        self.back()
 
     def is_end(self):
         if self.current>=self.length:
@@ -53,26 +61,30 @@ class Line:
             new_char = self.advance()
         content += '"'
         if self.is_end():
-            #ERROR
+            self.error = "Expected closing double quotation mark."
+            return 
         self.add_token(content, TokenClass.STRING, "String")
         
     def char_handler(self):
         content = "'"
         new_char = self.advance()
         if self.is_end():
-            #ERROR
+            self.error = "Expected closing single quotation mark"
+            return 
         content += new_char
         if new_char=="'":
             self.add_token(content, TokenClass.STRING, "String")
         else:
             new_char = self.advance()
             if self.is_end():
-                #ERROR
+                self.error = "Expected closing single quotation mark"
+                return 
             if new_char == "'":
                 content+=new_char
                 self.add_token(content, TokenClass.STRING, "String")
             else:
-                #ERROR
+                self.error = "Expected closing single quotation mark"
+                return 
     
     def is_digit(self, char):
         return char >= '0' and char <= '9'
@@ -114,7 +126,7 @@ class Line:
         elif content[1]!='_':
             self.add_token(content, TokenClass.IDENTIFIER, "Identifier")
         else:
-            #ERROR
+            self.error = "Any identifier name should not start with and underscore (_)."
     
     def single_line_comment(self):
         char =  self.advance()
@@ -147,7 +159,7 @@ class Line:
     def scan_tokens(self):
         if self.comment_on : 
             self.multi_line_comment()
-        while self.is_end():
+        while not self.is_end() and self.error=="":
             c = self.advance()
             match c:
                 case '(':
@@ -228,7 +240,7 @@ class Line:
                     next_char = self.advance()
                     if next_char == '=':
                         self.add_token("+=", TokenClass.PLUS_EQUAL, "Binary Operator")
-                    elif next_char == '+'
+                    elif next_char == '+':
                         self.add_token("++", TokenClass.PLUS_PLUS, "Unary Operator")
                     else:
                         self.back()
@@ -237,7 +249,7 @@ class Line:
                     next_char = self.advance()
                     if next_char == '=':
                         self.add_token("-=", TokenClass.MINUS_EQUAL, "Binary Operator")
-                    elif next_char == '-'
+                    elif next_char == '-':
                         self.add_token("--", TokenClass.MINUS_MINUS, "Unary Operator")
                     else:
                         self.back()
@@ -246,7 +258,7 @@ class Line:
                     next_char = self.advance()
                     if next_char == '=':
                         self.add_token("/=", TokenClass.DIV_EQUAL, "Binary Operator")
-                    elif next_char == '/'
+                    elif next_char == '/':
                         self.add_token("//", TokenClass.INT_DIV, "Binary Operator")
                     else:
                         self.back()
@@ -278,18 +290,18 @@ class Line:
                             self.add_token("$$", TokenClass.COMMENT_MARKER, "Comment Marker")
                             self.single_line_comment()
                     else:
-                        #ERROR
+                        self.error = "Invalid Syntax."
                 case "-":
                     new_char = self.advance()
                     if self.is_digit():
                         self.number(c+new_char)
                     else:
-                        #ERROR
+                        self.error = "Invalid Syntax."
                 case _:
                     if self.is_digit():
                         self.number(c)
                     elif self.is_alpha():
                         self.identifier_keyword(c)
                     else:
-                        #ERROR
+                        self.error = "Invalid Syntax."
                 
