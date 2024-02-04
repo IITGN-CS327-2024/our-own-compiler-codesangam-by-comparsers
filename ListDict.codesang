@@ -1,0 +1,31 @@
+$$ This is a test program in CodeSangam for Lists and Dictionary
+
+num main():
+    dict<num,num> d = [1:2, 3:4, 5:6]
+    dict<num,dict<num,num>> d2 = [2:[3:4, 4:5], 0:[1:2, 2:3]]
+    list<str> l = [“Hirva”, “Disha”, “Dhruv”, “Shubh”]
+
+    $$ Dictionary operations
+
+    d[3] = "Camel"
+    d[4] = 2346
+    keys = d.keys()
+    d.pop(1)
+    values = d.val()
+    d3 = d.copy()
+    num numKeys = d.len()
+
+    $$ List operations
+    
+    l.append("str")
+    l.insert(0, 24)
+    l2 = ["Disha", "Shraddha"]
+    l.join(l2)
+    sumResult = sum(l)
+    listLen = l.len()
+    occurrences = l.count("Disha")
+    element = l.access(2)
+    sliced = l.slice(1:4)
+    l.pop(5)
+
+    vapas 0
