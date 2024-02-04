@@ -1,0 +1,18 @@
+$$ Test program for closures in CodeSangam
+
+var add = kholiye num (num: num1, num: num2):
+    vapas num1 + num2
+
+karya num doClosure():
+    num result1 = add(7, 9)
+    num result2 = add(5, 3)
+
+    $$ Printing results
+    print("Result 1:", result1)
+    print("Result 2:", result2)
+
+    vapas 0
+
+num main():
+    doClosure()
+    vapas 0
