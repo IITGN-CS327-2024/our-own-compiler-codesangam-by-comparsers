@@ -20,6 +20,7 @@ class Lexer:
         file_lines = file_contents.splitlines()
         result = []
         line_number = 1
+        comment_continue = False
         for single_line in file_lines:
             if len(single_line)==0:
                 line_number+=1
@@ -28,9 +29,11 @@ class Lexer:
                 line_numer+=1
                 continue
             
-            line = Line(line_number, single_line)
+            line = Line(line_number, single_line, comment_continue)
+            comment_continue = line.comment_on
             line_number+=1
             result.append(line)
+
 
     def print_lexemes(self):
         for line in self.lines:

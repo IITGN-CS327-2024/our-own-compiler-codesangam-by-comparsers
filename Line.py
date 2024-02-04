@@ -2,27 +2,28 @@ from Token import *
 from TokenClass import *
 
 KeyWords = {
-    "in" = TokenClass.IN
-    "num" = TokenClass.NUM
-    "str" = TokenClass.STR
+    "in": TokenClass.IN
+    "num": TokenClass.NUM
+    "str": TokenClass.STR
 }
 
 class Line:
-    def __init__(self, line_number, line_content, current = 0, is_comment = False):
+    def __init__(self, line_number, line_content, comment_on, current = 0):
         self.line_number = line_number
         self.line_content = line_content
+        self.comment_on = comment_on
         self.token_list = []
         self.current = current
+        self.indentation = 0
         self.find_indentation()
         self.length = len(line_content)
-        self.is_comment = is_comment
         self.scan_tokens()
     
     def print_lexemes(self):
         #Print in requried format
 
     def find_indentation(self):
-        #Find the indenation of line
+        #Find the indentation of line
         #change start where the content starts after indentation
         #change current as start
 
@@ -100,20 +101,20 @@ class Line:
             self.add_token(TokenClass.NUMBER, "Number")
             self.back()
     
-    def identifier_keyword(self):
+    def identifier_keyword(self, char):
         new_char = self.advance()
-        content = "'"  
-        content += new_char
+        content = char
         while not self.is_end() and self.is_alpha(new_char):
             content+=new_char
             new_char = self.advance()
-        content = ""
         if not self.is_end():
             self.back()
         if content in list(KeyWords.keys()):
             self.add_token(content, TokenClass.KeyWords[content], "Key Words")
         elif content[1]!='_':
             self.add_token(content, TokenClass.IDENTIFIER, "Identifier")
+        else:
+            #ERROR
     
     def single_line_comment(self):
         char =  self.advance()
@@ -122,8 +123,30 @@ class Line:
             content+=char
             char = self.advance()
         self.add_token(content, TokenClass.COMMENT, "Comment")
+
+    def multi_line_comment(self):
+        char = self.advance()
+        content = ""
+        while not self.is_end():
+            if char=='$':
+                if self.advance()=='$':
+                    if self.advance()=='$':
+                        break
+                    else:
+                        self.back()
+                        self.back()
+                else:
+                    self.back()
+            content+=char
+        self.add_token(content, TokenClass.COMMENT, "Comment")
+        if not self.is_end():
+            self.comment_on = False
+            self.add_tokent("$$$", TokenClass.COMMENT_MARK, "Comment Marker")         
+
                     
     def scan_tokens(self):
+        if self.comment_on : 
+            self.multi_line_comment()
         while self.is_end():
             c = self.advance()
             match c:
@@ -247,6 +270,7 @@ class Line:
                     if self.advance == '$':
                         if self.advance == '$':
                             #Multi Line Comment
+                            self.comment_on = True
                             self.add_token("$$$", TokenClass.COMMENT_MARKER, "Comment Marker")
                             self.multi_line_commet()
                         else:
@@ -263,9 +287,9 @@ class Line:
                         #ERROR
                 case _:
                     if self.is_digit():
-                        self.number(c):
+                        self.number(c)
                     elif self.is_alpha():
-                        self.identifier_keyword()
+                        self.identifier_keyword(c)
                     else:
                         #ERROR
                 
