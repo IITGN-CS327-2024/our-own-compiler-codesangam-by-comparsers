@@ -109,7 +109,7 @@ Bitwise Operations:
 String Operations: 	
 ```codesangam
 str c = a+b		    //concatenate
-str c = a[1:5]		//slicing
+str c = a.slice(1:3)	//slicing
 ```
 Conditional Operators:  Used for comparison between 2 operands/ expressions.
 ```codesangam
