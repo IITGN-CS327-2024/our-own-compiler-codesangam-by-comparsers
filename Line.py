@@ -4,9 +4,46 @@ from TokenClass import *
 class Line:
 
     KeyWords = {
-        "in": TokenClass.IN,
-        "num": TokenClass.NUM,
-        "str": TokenClass.STR
+    "in" : TokenClass.IN,
+    "num" : TokenClass.NUM,
+    "bool" : TokenClass.BOOL,
+    "str" : TokenClass.STR,
+    "var" : TokenClass.VAR,
+    "Sahi" : TokenClass.SAHI,
+    "Galat" : TokenClass.GALAT,
+    "dict" : TokenClass.DICT,
+    "list" : TokenClass.LIST,
+    "tup" : TokenClass.TUP,
+    "arr" : TokenClass.ARR,
+    "int" : TokenClass.INT,
+    "float" : TokenClass.FLOAT,
+    "print" : TokenClass.PRINT,
+    "input" : TokenClass.INPUT,
+    "agar" : TokenClass.AGAR,
+    "magar" : TokenClass.MAGAR,
+    "nahitoh" : TokenClass.NAHITOH,
+    "niklo" : TokenClass.NIKLO,
+    "keliye" : TokenClass.KELIYE,
+    "jabtak" : TokenClass.JABTAK,
+    "karya" : TokenClass.KARYA,
+    "vapas" : TokenClass.VAPAS,
+    "void" : TokenClass.VOID,
+    "kholiye" : TokenClass.KHOLIYE,
+    "let" : TokenClass.LET,
+    "koshis" : TokenClass.KOSHISH,
+    "varma" : TokenClass.VARNA,
+    "len" : TokenClass.LEN,
+    "slice" : TokenClass.SLICE ,
+    "count" : TokenClass.COUNT ,
+    "access" : TokenClass.ACCESS ,
+    "append" : TokenClass.APPEND ,
+    "insert" : TokenClass.INSERT ,
+    "join" : TokenClass.JOIN ,
+    "sum" : TokenClass.SUM ,
+    "pop" : TokenClass.POP ,
+    "keys" : TokenClass.KEYS ,
+    "val" : TokenClass.VAL ,
+    "copy" : TokenClass.COPY
     }
 
     def __init__(self, line_number, line_content, comment_on, current = 0):
@@ -217,7 +254,7 @@ class Line:
                     if self.token_list[len(self.token_list)-1].parent_type == "Key Word":
                         self.add_token(c, TokenClass.SPECIFIER_END, "Type Specifier Mark")
                     elif self.advance()=='=':
-                        self.add_token(">=", TokenClass.GREATER_EQUAL_EQUAL, "Conditional Operator")
+                        self.add_token(">=", TokenClass.GREATER_EQUAL, "Conditional Operator")
                     else:
                         self.back()
                         self.add_token(c, TokenClass.GREATER, "Conditional Operator")

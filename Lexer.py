@@ -30,7 +30,6 @@ class Lexer:
                 line_number+=1
                 continue
             
-            print(line_number)
             line = Line(line_number, single_line, comment_continue)
             comment_continue = line.comment_on
             line_number+=1
