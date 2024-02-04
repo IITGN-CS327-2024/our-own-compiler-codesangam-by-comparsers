@@ -1,13 +1,14 @@
 from Token import *
 from TokenClass import *
 
-KeyWords = {
-    "in": TokenClass.IN,
-    "num": TokenClass.NUM,
-    "str": TokenClass.STR
-}
-
 class Line:
+
+    KeyWords = {
+        "in": TokenClass.IN,
+        "num": TokenClass.NUM,
+        "str": TokenClass.STR
+    }
+
     def __init__(self, line_number, line_content, comment_on, current = 0):
         self.line_number = line_number
         self.line_content = line_content
@@ -33,6 +34,7 @@ class Line:
                 self.indentation+=1
             else:
                 self.indentation+=4
+            char = self.advance()
         self.back()
 
     def is_end(self):
@@ -49,36 +51,39 @@ class Line:
         self.current-=1
         return 
     
-    def add_token(self, token_type, parent_type):
-        new_token = Token(token_type, parent_type)
+    def add_token(self, content, token_type, parent_type):
+        new_token = Token(content, token_type, parent_type)
         self.token_list.append(new_token)
 
     def string_handler(self):
         content = '"'
         new_char = self.advance()
-        while not self.is_end() and new_char != '"':
+        while not self.is_end() and (new_char != '”' and new_char!='"'):
             content+=new_char
             new_char = self.advance()
         content += '"'
         if self.is_end():
-            self.error = "Expected closing double quotation mark."
+            if new_char=='"' or new_char=='”':
+                self.add_token(content, TokenClass.STRING, "String")
+            else:
+                self.error = "Expected closing double quotation mark."
             return 
         self.add_token(content, TokenClass.STRING, "String")
         
     def char_handler(self):
         content = "'"
-        new_char = self.advance()
         if self.is_end():
             self.error = "Expected closing single quotation mark"
             return 
+        new_char = self.advance()
         content += new_char
         if new_char=="'":
             self.add_token(content, TokenClass.STRING, "String")
         else:
-            new_char = self.advance()
             if self.is_end():
                 self.error = "Expected closing single quotation mark"
                 return 
+            new_char = self.advance()
             if new_char == "'":
                 content+=new_char
                 self.add_token(content, TokenClass.STRING, "String")
@@ -94,39 +99,44 @@ class Line:
     
     def number(self, digit):
         content = digit
-        new_char = self.advance()
-        while not self.is_end() and self.is_digit(new_char): 
-            content+=new_char
+        new_char = ""
+        while not self.is_end(): 
             new_char =  self.advance()
-        if self.is_end():
-            self.add_token(TokenClass.NUMBER, "Number")
-        elif new_char==".":
-            content+=new_char
-            new_char = self.advance()
-            while not self.is_end() and self.is_digit(new_char):
+            if self.is_digit(new_char):
                 content+=new_char
-                new_char = self.advance()
-            self.add_token(TokenClass.NUMBER, "Number")
-            if not self.is_end():
+            else:
                 self.back()
+                break
+        if new_char==".":
+            content+=new_char
+            self.advance()
+            while not self.is_end():
+                new_char =  self.advance()
+                if self.is_digit(new_char):
+                    content+=new_char
+                else:
+                    self.back()
+                    break
+            self.add_token(content, TokenClass.NUMBER, "Number")
         else:
-            self.add_token(TokenClass.NUMBER, "Number")
-            self.back()
+            self.add_token(content, TokenClass.NUMBER, "Number")
     
     def identifier_keyword(self, char):
-        new_char = self.advance()
         content = char
-        while not self.is_end() and self.is_alpha(new_char):
-            content+=new_char
-            new_char = self.advance()
-        if not self.is_end():
-            self.back()
-        if content in list(KeyWords.keys()):
-            self.add_token(content, TokenClass.KeyWords[content], "Key Words")
-        elif content[1]!='_':
+        new_char = ""
+        while not self.is_end(): 
+            new_char =  self.advance()
+            if self.is_digit(new_char) or self.is_alpha(new_char):
+                content+=new_char
+            else:
+                self.back()
+                break
+        if content in list(self.KeyWords.keys()):
+            self.add_token(content, self.KeyWords[content], "Key Words")
+        elif content[0]!='_':
             self.add_token(content, TokenClass.IDENTIFIER, "Identifier")
         else:
-            self.error = "Any identifier name should not start with and underscore (_)."
+            self.error = "Any identifier name should not start with num or underscore (_)."
     
     def single_line_comment(self):
         char =  self.advance()
@@ -134,6 +144,7 @@ class Line:
         while not self.is_end():
             content+=char
             char = self.advance()
+        content+=char
         self.add_token(content, TokenClass.COMMENT, "Comment")
 
     def multi_line_comment(self):
@@ -153,7 +164,7 @@ class Line:
         self.add_token(content, TokenClass.COMMENT, "Comment")
         if not self.is_end():
             self.comment_on = False
-            self.add_tokent("$$$", TokenClass.COMMENT_MARK, "Comment Marker")         
+            self.add_tokent("$$$", TokenClass.COMMENT_MARKER, "Comment Marker")         
 
                     
     def scan_tokens(self):
@@ -197,7 +208,7 @@ class Line:
                 case '<':
                     if self.token_list[len(self.token_list)-1].parent_type == "Key Word":
                         self.add_token(c, TokenClass.SPECIFIER_START, "Type Specifier Mark")
-                    elif self.advance=='=':
+                    elif self.advance()=='=':
                         self.add_token("<=", TokenClass.LESS_EQUAL, "Conditional Operator")
                     else:
                         self.back()
@@ -274,34 +285,31 @@ class Line:
                         self.add_token(c, TokenClass.MULT, "Binary Operator")
                 case '%':
                     self.add_token(c, TokenClass.MODULO, "Binary Operator")
-                case '"':
-                    self.string_handler()
-                case "'":
-                    self.char_handler()
                 case "$":
-                    if self.advance == '$':
-                        if self.advance == '$':
+                    if self.advance() == '$':
+                        if self.advance() == '$':
                             #Multi Line Comment
                             self.comment_on = True
                             self.add_token("$$$", TokenClass.COMMENT_MARKER, "Comment Marker")
                             self.multi_line_commet()
                         else:
                             #Single Line Comment
+                            self.back()
                             self.add_token("$$", TokenClass.COMMENT_MARKER, "Comment Marker")
                             self.single_line_comment()
                     else:
-                        self.error = "Invalid Syntax."
-                case "-":
-                    new_char = self.advance()
-                    if self.is_digit():
-                        self.number(c+new_char)
-                    else:
+                        self.back()
                         self.error = "Invalid Syntax."
                 case _:
-                    if self.is_digit():
+                    if self.is_digit(c):
                         self.number(c)
-                    elif self.is_alpha():
+                    elif self.is_alpha(c):
                         self.identifier_keyword(c)
                     else:
-                        self.error = "Invalid Syntax."
+                        if c=='"' or c=='“':
+                            self.string_handler()
+                        elif c=='\'':
+                            self.char_handler()
+                        else:
+                            self.error = "Invalid Syntax."
                 

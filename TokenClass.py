@@ -107,6 +107,6 @@ class TokenClass(Enum):
     STRING = 81 # Constant String
     NUMBER = 82 # Constant Number
 
-    COMMENT_MARK = 83 # $$
+    COMMENT_MARKER = 83 # $$
 
     COMMENT = 84 # Comment Content
