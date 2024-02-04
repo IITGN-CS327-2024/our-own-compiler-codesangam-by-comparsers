@@ -52,39 +52,25 @@ class TokenClass(Enum):
     RIGHT_SQUARE = 46 # ]
 
     #Punctuations
-    COMMA =36 # ,
-    DOT =37 # .
-    COLON =40 # :
-    SEMI = 41 # ;
+    COMMA =47 # ,
+    DOT =48 # .
+    COLON =49 # :
+    SEMI = 50 # ;
 
-    EOF = 43 # End of File
+    EOF = 51 # End of File
 
     #Binary Operators
-    PLUS = 44 # +
-    PLUS_EQUAL = 45 # +=
-    MINUS = 46 # -
-    MINUS_EQUAL = 47 # -=
-    MULT = 48 # *
-    MULT_EQUAL = 49 # *=
-    DIV = 50 # /
-    DIV_EQUAL = 51 # /=
-    INT_DIV = 52 # //
-    EXP = 53 # **
-    MODULO = 54 # %
-
-    #Unary Operator
-    PLUS_PLUS = 55 # ++
-    MINUS_MINUS = 56 # --
-
-    #Logical Operator
-    BANG = 57 # ! ~
-    AND_AND = 58 # &&
-    OR_OR = 59 # ||
-
-    #Bitwise Operator
-    OR = 60 # bitwise |
-    XOR = 61 # bitwise ^
-    AND = 62 # bitwise & 
+    PLUS = 52 # +
+    PLUS_EQUAL = 53 # +=
+    MINUS = 54 # -
+    MINUS_EQUAL = 55 # -=
+    MULT = 56 # *
+    MULT_EQUAL = 57 # *=
+    DIV = 58 # /
+    DIV_EQUAL = 59 # /=
+    INT_DIV = 60 # //
+    EXP = 61 # **
+    MODULO = 62 # %
 
     #Condiation Operator
     BANG_EQUAL = 63 # != ~=
@@ -94,19 +80,33 @@ class TokenClass(Enum):
     LESS = 67 # <
     LESS_EQUAL = 68 # <=
 
+    #Unary Operator
+    PLUS_PLUS = 69 # ++
+    MINUS_MINUS = 70 # --
+
+    #Logical Operator
+    BANG = 71 # ! ~
+    AND_AND = 72 # &&
+    OR_OR = 73 # ||
+
+    #Bitwise Operator
+    OR = 74 # bitwise |
+    XOR = 75 # bitwise ^
+    AND = 76 # bitwise & 
+
     # Type Specifier Mark
-    SPECIFIER_START = 69 # <
-    SPECIFIER_END = 70 # >
+    SPECIFIER_START = 77 # <
+    SPECIFIER_END = 78 # >
 
     #Assignment Operator
-    EQUAL = 71 # =
+    EQUAL = 79 # =
     
     #Identifier
-    IDENTIFIER = 72
+    IDENTIFIER = 80
 
-    STRING = 73 # Constant String
-    NUMBER = 74 # Constant Number
+    STRING = 81 # Constant String
+    NUMBER = 82 # Constant Number
 
-    COMMENT_MARK = 75 # $$
+    COMMENT_MARK = 83 # $$
 
-    COMMENT = 76 # Comment Content
+    COMMENT = 84 # Comment Content
