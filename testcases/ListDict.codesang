@@ -1,9 +1,9 @@
-$$ This is a test program in CodeSangam for Lists and Dictionary
+$$ Test program for Lists and Dictionary in CodeSangam 
 
 num main():
     dict<num,num> d = [1:2, 3:4, 5:6]
     dict<num,dict<num,num>> d2 = [2:[3:4, 4:5], 0:[1:2, 2:3]]
-    list<str> l = [“Hirva”, “Disha”, “Dhruv”, “Shubh”]
+    list<str> l = ["Disha", "Shubh", "Hirva", "Dhruv"]
 
     $$ Dictionary operations
 

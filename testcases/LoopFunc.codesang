@@ -1,4 +1,4 @@
-$$ test program in CodeSangam for loops and function
+$$ Test program for loops and function in CodeSangam
 
 karya bool isPass(num marks):
     agar (marks > 80):
@@ -13,15 +13,14 @@ karya bool isPass(num marks):
 
 num main():
     num count = 0
-    num j = 2
     keliye (num i = 1; i < 5; i++, j++):
         print("Iteration: ", i)
         count += 1
 
-    inp = input(“Enter a positive number: ”, num) 
-    jabtak (inp >0):
-        print("Number: ", inp)
-        inp -= 1
+    count=0
+    jabtak (count < 3):
+        print("Count: ", count)
+        count += 1
 
     $$ Function call
     bool result = isPass(75)
