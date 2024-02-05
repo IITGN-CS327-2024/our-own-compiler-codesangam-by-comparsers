@@ -59,9 +59,9 @@ class Line:
         self.scan_tokens()
     
     def print_lexemes(self):
-        print("line",self.line_number,"indent block",self.indentation,end=": ")
+        print("line",self.line_number,"indent block",self.indentation,":")
         for token in self.token_list:
-            print("<",token.content,",",token.type,",",token.parent_type,">",end=", ")
+            print("\t", "<",token.content,",",token.type,",",token.parent_type,">")
         print()
 
     def find_indentation(self):
@@ -169,7 +169,7 @@ class Line:
                 self.back()
                 break
         if content in list(self.KeyWords.keys()):
-            self.add_token(content, self.KeyWords[content], "Key Words")
+            self.add_token(content, self.KeyWords[content], "Key Word")
         elif content[0]!='_':
             self.add_token(content, TokenClass.IDENTIFIER, "Identifier")
         else:
@@ -185,23 +185,27 @@ class Line:
         self.add_token(content, TokenClass.COMMENT, "Comment")
 
     def multi_line_comment(self):
-        char = self.advance()
         content = ""
         while not self.is_end():
+            char = self.advance()
             if char=='$':
-                if self.advance()=='$':
+                if not self.is_end():
                     if self.advance()=='$':
-                        break
+                        if not self.is_end():
+                            if self.advance()=='$':
+                                self.comment_on = False
+                                break
+                            else:
+                                self.back()
+                                self.back()
+                        else:
+                            self.back()
                     else:
                         self.back()
-                        self.back()
-                else:
-                    self.back()
             content+=char
         self.add_token(content, TokenClass.COMMENT, "Comment")
-        if not self.is_end():
-            self.comment_on = False
-            self.add_tokent("$$$", TokenClass.COMMENT_MARKER, "Comment Marker")         
+        if not self.comment_on:
+            self.add_token("$$$", TokenClass.COMMENT_MARKER, "Comment Marker")         
 
                     
     def scan_tokens(self):
@@ -328,7 +332,7 @@ class Line:
                             #Multi Line Comment
                             self.comment_on = True
                             self.add_token("$$$", TokenClass.COMMENT_MARKER, "Comment Marker")
-                            self.multi_line_commet()
+                            self.multi_line_comment()
                         else:
                             #Single Line Comment
                             self.back()

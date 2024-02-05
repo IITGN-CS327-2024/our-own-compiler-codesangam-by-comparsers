@@ -16,3 +16,10 @@ karya num doClosure():
 num main():
     doClosure()
     vapas 0
+
+$$$ Hello $$
+
+This is a 
+multiline comment$$$
+
+"This will be treated as a string"
