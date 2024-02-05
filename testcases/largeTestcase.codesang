@@ -1,0 +1,200 @@
+$$ Large Test Case in CodeSangam Language
+var add = kholiye num (num: num1, num: num2):
+    vapas num1 + num2
+
+karya num doClosure():
+    num result1 = add(7, 9)
+    num result2 = add(5, 3)
+
+    $$ Printing results
+    print("Result 1:", result1)
+    print("Result 2:", result2)
+
+    vapas 0
+
+karya num compilerProject():
+    print("Working hard for compiler project")
+    vapas 0
+
+karya num gradedown():
+    print("Not working hard for compiler project")
+    vapas 0
+
+karya num calculateRectangleArea(num length, num width):
+    num area = length * width
+    vapas area
+
+karya bool isPass(num marks):
+    agar (marks > 80):
+        print("Pass")
+        vapas Sahi
+    magar (marks > 30 && marks <= 80):
+        print("Re-exam")
+        vapas Sahi
+    nahitoh:
+        print("Fail")
+        vapas Galat
+
+num main():
+    $$ closures
+    doClosure()
+
+    $$ Using Let Statements
+    print((let num a = 5 in a) * (let num a = 6 in 2*a))
+    print(let str name = “Dhruv” in (“My name is “+name))
+
+    $$ Using Exceptions
+    koshish:
+        compilerProject()
+    warna:
+        gradedown()
+
+    num count = 0
+    keliye (num i = 1; i < 5; i++, j++):
+        print("Iteration: ", i)
+        count += 1
+
+    count=0
+    jabtak (count < 3):
+        print("Count: ", count)
+        count += 1
+
+    $$ Function call
+    bool result = isPass(75)
+
+    $$ Variable declarations
+    num age = 25
+    str name = "John"
+    bool isStudent = Sahi
+
+    $$ Dictionary
+    dict<num, str> studentInfo = [1: "Shraddha", 2: "Tripti", 3: "Ananya"]
+
+    $$ Function calls
+    studentInfo[4] = "Shanaya"  // if str
+    studentInfo[5] = 2346  // if num/bool
+    keysList = studentInfo.keys()
+    studentInfo.pop(2)
+    valuesList = studentInfo.val()
+    copiedDict = studentInfo.copy()
+    num numKeys = studentInfo.len()
+
+    $$ List
+    list<str> namesList = ["Hirva", "Disha", "Dhruv", "Shubh"]
+
+    $$ List operations
+    namesList.append(123)  // if num/bool/var
+    namesList.append("str")  // if str
+    namesList.insert(0, 24)  // inserts 24 at 1st position
+    otherList = ["Joey", "Jane"]
+    namesList.join(otherList)
+    sumResult = sum(namesList)
+    listLen = namesList.len()
+    occurrences = namesList.count(1)
+    element = namesList.access(2)
+    slicedList = namesList.slice(1:4)
+    namesList.pop(5)  // removes the 5-indexed element from the list
+
+    $$ Tuple
+    tup<var> mixedTuple = ["abc", Gaalat, 79]  // allows different datatypes in its content
+    tup<num> numberTuple = [12, 0, 79]  // can only contain one type of datatype
+
+    $$ Tuple operations
+    countRes = mixedTuple.count(1)  // counts occurrences of 1
+    accessRes = mixedTuple.access(1)  // access 1-indexed element
+    tupleLen = mixedTuple.len()  // returns the length of the tuple
+
+    $$ Number operations
+    num garbage = 5  // garbage values
+    convNum = int(garbage)  // will assign integer value of garbage to convNum, the datatype will remain num
+    addRes = convNum + 10
+    mulRes = convNum * 5
+    subRes = convNum - 3
+    divRes = convNum / 2
+    unaryRes = convNum += 5  // unary operator
+    inteDivRes = convNum // 3  // integer divide
+    expRes = convNum ** 2  // exponent (raised to the power 2)
+    remRes = convNum % 3  // returns remainder
+
+    $$ Logical Operators
+    bool isValid = Sahi && Galat  // and
+    bool isOrValid = Sahi || Galat  // or
+    notValid = ~isValid  // not
+
+    $$ Bitwise Operators
+    res_bitwise_and = convNum & 7  // bitwise and
+    bitwiseOrResult = convNum | 3  // bitwise or
+    bitwiseXorResult = convNum ^ 4  // bitwise xor
+
+    $$ String Operations
+    concatenatedString = name + " Doe"  // concatenate
+    slicedString = name.slice(1:3)  // slicing
+
+    $$ Conditional Operators
+    lessThanResult = convNum < 8
+    greaterThanResult = convNum > 5
+    greaterEqualResult = convNum >= 6
+    lessEqualResult = convNum <= 7
+    isEqual = convNum == 5
+    notEqualResult = convNum != 4
+
+    $$ Print Statements
+    print("Name:", name)
+    print("Age:", age)
+    print("Keys List:", keysList)
+    print("Values List:", valuesList)
+    print("Copied Dictionary:", copiedDict)
+    print("Number of Keys:", numKeys)
+    print("Names List:", namesList)
+    print("Sum Result:", sumResult)
+    print("Occurrences of 1:", occurrences)
+    print("Element at 2nd position:", element)
+    print("Sliced List:", slicedList)
+    print("Mixed Tuple:", mixedTuple)
+    print("Number Tuple:", numberTuple)
+    print("Count Result:", countResult)
+    print("Access Result:", accessResult)
+    print("Tuple Length:", tupleLen)
+    print("Addition Result:", addRes)
+    print("Multiplication Result:", mulRes)
+    print("Subtraction Result:", subRes)
+    print("Division Result:", divRes)
+    print("Unary Result:", unaryRes)
+    print("Integer Divide Result:", inteDivRes)
+    print("Exponent Result:", expRes)
+    print("Remainder Result:", remRes)
+    print("Logical AND Result:", isValid)
+    print("Logical OR Result:", isOrValid)
+    print("Logical NOT Result:", notValid)
+    print("Bitwise AND Result:", res_bitwise_and)
+    print("Bitwise OR Result:", bitwiseOrResult)
+    print("Bitwise XOR Result:", bitwiseXorResult)
+    print("Concatenated String:", concatenatedString)
+    print("Sliced String:", slicedString)
+    print("Less Than Result:", lessThanResult)
+    print("Greater Than Result:", greaterThanResult)
+    print("Greater Equal Result:", greaterEqualResult)
+    print("Less Equal Result:", lessEqualResult)
+    print("Is Equal Result:", isEqual)
+    print("Not Equal Result:", notEqualResult)
+
+    $$ printing Fibonacci numbers
+    num n = 10  // Adjust the value of 'n' to print the desired number of Fibonacci numbers
+    num a = 0
+    num b = 1
+
+    print("Fibonacci Series:")
+    keliye (num i = 1; i <= n; i++):
+        print(a)
+        num temp = a + b
+        a = b
+        b = temp
+
+    $$ area of rectangle
+    num length = 5
+    num width = 10
+    num areaResult = calculateRectangleArea(length, width)
+    print("Area of the rectangle:", areaResult)
+
+    $$ End of program
+    vapas 0
