@@ -58,7 +58,7 @@ num main():
         print("Iteration: ", i)
 
     $$ Intentional Error: Mismatched types in assignment
-    num age = "Disha"
+    num age = "Disha
 
     $$ Intentional Error: Invalid function call with incorrect arguments
     bool result = isPass("Invalid")
