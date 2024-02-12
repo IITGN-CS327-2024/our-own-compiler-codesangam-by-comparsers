@@ -9,7 +9,6 @@ class Parser:
 
        
 
-
 if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Parser(file_path)
