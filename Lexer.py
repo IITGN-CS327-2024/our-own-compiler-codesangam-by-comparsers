@@ -47,10 +47,15 @@ class Lexer:
                 continue
             line.print_lexemes()
 
+    def print_tokens(self):
+        for line in self.lines:
+            for token in line.token_list:
+                print('\t',token.content,'\t',token.type)
+
 if __name__ == "__main__":
     file_path = sys.argv[1]
     lexer = Lexer(file_path)
     lexer.classify_lexemes()
-    lexer.print_lexemes()
+    lexer.print_tokens()
 
             
