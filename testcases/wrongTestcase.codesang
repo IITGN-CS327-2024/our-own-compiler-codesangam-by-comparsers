@@ -27,7 +27,8 @@ karya num calculateRectangleArea(num length, num width):
 
 karya bool isPass(num marks):
     agar (marks > 80):
-        print("Pass")
+        $$ string is not closed
+        print("Pass) 
         vapas Sahi
     magar (marks > 30 && marks <= 80):
         print("Re-exam")
