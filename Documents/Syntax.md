@@ -214,7 +214,7 @@ Similar to try-except for python
 ```codesangam
 koshish:
 	compilerProject()
-warna:
+varna:
 	gradedown()
 ```
 

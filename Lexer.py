@@ -8,6 +8,7 @@ class Lexer:
         self.lines = []
         self.line_start = 0
         self.line_current = 0
+        self.has_error = False
     
     def classify_lexemes(self):
         file_contents = ""
@@ -33,9 +34,10 @@ class Lexer:
             line = Line(line_number, single_line, comment_continue)
             comment_continue = line.comment_on
             line_number+=1
-            if line.error != "":
+            if line.has_error:
                 print("Error at line", line.line_number)
                 print("ERROR:", line.error)
+                self.has_error = True
                 break
             self.lines.append(line)
 
@@ -56,6 +58,7 @@ if __name__ == "__main__":
     file_path = sys.argv[1]
     lexer = Lexer(file_path)
     lexer.classify_lexemes()
-    lexer.print_lexemes()
+    if not lexer.has_error:
+        lexer.print_lexemes()
 
             

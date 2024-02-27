@@ -30,8 +30,8 @@ class Line:
     "void" : TokenClass.VOID,
     "kholiye" : TokenClass.KHOLIYE,
     "let" : TokenClass.LET,
-    "koshis" : TokenClass.KOSHISH,
-    "varma" : TokenClass.VARNA,
+    "koshish" : TokenClass.KOSHISH,
+    "varna" : TokenClass.VARNA,
     "len" : TokenClass.LEN,
     "slice" : TokenClass.SLICE ,
     "count" : TokenClass.COUNT ,
@@ -57,6 +57,7 @@ class Line:
         self.length = len(line_content)
         self.error = ""
         self.scan_tokens()
+        self.has_error = False
     
     def print_lexemes(self):
         print("line",self.line_number,"indent block",self.indentation,":")
@@ -104,6 +105,7 @@ class Line:
                 self.add_token(content, TokenClass.STRING, "String")
             else:
                 self.error = "Expected closing double quotation mark."
+                self.has_error = True
             return 
         self.add_token(content, TokenClass.STRING, "String")
         
@@ -111,6 +113,7 @@ class Line:
         content = "'"
         if self.is_end():
             self.error = "Expected closing single quotation mark"
+            self.has_error = True
             return 
         new_char = self.advance()
         content += new_char
@@ -119,6 +122,7 @@ class Line:
         else:
             if self.is_end():
                 self.error = "Expected closing single quotation mark"
+                self.has_error = True
                 return 
             new_char = self.advance()
             if new_char == "'":
@@ -126,6 +130,7 @@ class Line:
                 self.add_token(content, TokenClass.STRING, "String")
             else:
                 self.error = "Expected closing single quotation mark"
+                self.has_error = True
                 return 
     
     def is_digit(self, char):
@@ -174,6 +179,7 @@ class Line:
             self.add_token(content, TokenClass.IDENTIFIER, "Identifier")
         else:
             self.error = "Any identifier name should not start with num or underscore (_)."
+            self.has_error = True
     
     def single_line_comment(self):
         char =  self.advance()
@@ -211,7 +217,7 @@ class Line:
     def scan_tokens(self):
         if self.comment_on : 
             self.multi_line_comment()
-        while not self.is_end() and self.error=="":
+        while not self.is_end() and not self.has_error:
             c = self.advance()
             match c:
                 case '(':
@@ -341,6 +347,7 @@ class Line:
                     else:
                         self.back()
                         self.error = "Invalid Syntax."
+                        self.has_error = True
                 case _:
                     if self.is_digit(c):
                         self.number(c)
@@ -353,4 +360,5 @@ class Line:
                             self.char_handler()
                         else:
                             self.error = "Invalid Syntax."
+                            self.has_error = True
                 
