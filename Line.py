@@ -56,8 +56,9 @@ class Line:
         self.find_indentation()
         self.length = len(line_content)
         self.error = ""
-        self.scan_tokens()
         self.has_error = False
+        self.scan_tokens()
+        
     
     def print_lexemes(self):
         print("line",self.line_number,"indent block",self.indentation,":")
