@@ -46,20 +46,30 @@ class Line:
     "copy" : TokenClass.COPY
     }
 
-    def __init__(self, line_number, line_content, comment_on, current = 0):
-        self.line_number = line_number
-        self.line_content = line_content
-        self.comment_on = comment_on
-        self.token_list = []
-        self.current = current
-        self.indentation = 0
-        self.find_indentation()
-        self.length = len(line_content)
-        self.error = ""
-        self.has_error = False
-        self.scan_tokens()
-        
-    
+    def __init__(self, line_number, line_content, comment_on, perform, current = 0):
+        if perform:
+            self.line_number = line_number
+            self.line_content = line_content
+            self.comment_on = comment_on
+            self.token_list = []
+            self.current = current
+            self.indentation = 0
+            self.find_indentation()
+            self.length = len(line_content)
+            self.error = ""
+            self.has_error = False
+            self.scan_tokens()
+        else:
+            self.line_number = line_number
+            self.line_content = line_content
+            self.comment_on = comment_on
+            self.token_list = []
+            self.current = current
+            self.indentation = 0
+            self.length = len(line_content)
+            self.error = ""
+            self.has_error = False
+
     def print_lexemes(self):
         print("line",self.line_number,"indent block",self.indentation,":")
         for token in self.token_list:

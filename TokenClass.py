@@ -57,7 +57,11 @@ class TokenClass(Enum):
     COLON =49 # :
     SEMI = 50 # ;
 
-    EOF = 51 # End of File
+    #Extras
+    EOF = 51  # End of File
+    START_INDENT = 85
+    END_INDENT = 86
+    NEW_LINE = 87
 
     #Binary Operators
     PLUS = 52 # +
