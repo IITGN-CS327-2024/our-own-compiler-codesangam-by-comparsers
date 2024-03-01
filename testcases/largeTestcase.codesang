@@ -34,7 +34,7 @@ karya bool isPass(num marks):
     nahitoh:
         print("Fail")
         vapas Galat
-
+        
 num main():
     $$ closures
     doClosure()
@@ -198,3 +198,4 @@ num main():
 
     $$ End of program
     vapas 0
+

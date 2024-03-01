@@ -12,7 +12,8 @@
    - COMMA, DOT, COLON, SEMI
    - **Regular Language:** `,|\.|:|;`
 
-4. **EOF (End of File):**
+4. **Extras:**
+   - EOF(End of File), START_INDENT, END_INDENT, NEW_LINE
 
 5. **Binary Operators:**
    - PLUS, PLUS_EQUAL, MINUS, MINUS_EQUAL, MULT, MULT_EQUAL, DIV, DIV_EQUAL, INT_DIV, EXP, MODULO
@@ -61,3 +62,4 @@
 16. **Comment Content:**
     - COMMENT
     - **Regular Language:** `.*`
+
