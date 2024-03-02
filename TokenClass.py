@@ -50,6 +50,8 @@ class TokenClass(Enum):
     RIGHT_BRACE = 44 # }
     LEFT_SQUARE = 45 # [
     RIGHT_SQUARE = 46 # ]
+    DICT_LEFT = 88 # \[
+    DICT_RIGHT = 89 # \]
 
     #Punctuations
     COMMA =47 # ,
@@ -59,8 +61,8 @@ class TokenClass(Enum):
 
     #Extras
     EOF = 51  # End of File
-    START_INDENT = 85
-    END_INDENT = 86
+    INDENT = 85
+    DEDENT = 86
     NEW_LINE = 87
 
     #Binary Operators

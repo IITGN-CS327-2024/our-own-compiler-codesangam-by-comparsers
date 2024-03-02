@@ -32,8 +32,8 @@ Redeclaration of variables is not allowed, and a variable, once assigned to one 
 ## Compound Structures
 ### Dictionary 
 ```codesangam
-dict<num,num> d = [2:3, 3:4, 5:6, 7:8 ]		//keys can num and str only
-dict<num,dict<num,num>> d2 = [2:[3:4,4:5], 0:[1:2, 2:3]]
+dict<num,num> d = \[2:3, 3:4, 5:6, 7:8 \]		//keys can num and str only
+dict<num,dict<num,num>> d2 = \[2:\[3:4,4:5\], 0:\[1:2, 2:3\]\]
 ```
 Functions:
 ```codesangam
@@ -66,8 +66,8 @@ l.pop(5)				//removes the 5-indexed element from the list
 
 ### Tuple 
 ```codesangam
-tup<var> t = [“abc”,Galat,79] (tuple<var> allows different datatypes in its content)
-tup<num> t = [12,0,79]        (tuple can only contain one type of datatype)
+tup<var> t = {“abc”,Galat,79} (tuple<var> allows different datatypes in its content)
+tup<num> t = {12,0,79}        (tuple can only contain one type of datatype)
 ```
 Functions:
 ```codesangam
@@ -222,3 +222,5 @@ varna:
 Add  `$$` before every line to consider it as a comment line.
 
 For multi line comment, add `$#` at start and `#$` at end of the comment.
+
+## General Rules

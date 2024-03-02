@@ -251,6 +251,16 @@ class Line:
                     self.add_token(c, TokenClass.SEMI, "Punctuation")
                 case ':':
                     self.add_token(c, TokenClass.COLON, "Punctuation")
+                case '\\':
+                    next_char = self.advance()
+                    if next_char=='[':
+                        self.add_token("\[", TokenClass.DICT_LEFT, "Parenthesis")
+                    elif next_char==']':
+                        self.add_token("\]", TokenClass.DICT_RIGHT, "Parenthesis")
+                    else:
+                        self.back()
+                        self.error = "Invalid Syntax."
+                        self.has_error = True
                 case ' ':
                     pass
                 case '\t':

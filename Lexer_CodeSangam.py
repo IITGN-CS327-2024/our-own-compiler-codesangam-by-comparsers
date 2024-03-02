@@ -35,11 +35,11 @@ class Lexer_:
             
             line = Line(line_number, single_line, comment_continue, True)
             if line.indentation>previous_indent:
-                new_token = Token("", TokenClass.START_INDENT, "Extras")
+                new_token = Token("", TokenClass.INDENT, "Extras")
                 line.token_list.insert(0, new_token)
                 depth_indent+=1
             if line.indentation<previous_indent:
-                new_token = Token("", TokenClass.END_INDENT, "Extras")
+                new_token = Token("", TokenClass.DEDENT, "Extras")
                 line.token_list.insert(0, new_token)
                 depth_indent-=1
             previous_indent = line.indentation
@@ -48,9 +48,8 @@ class Lexer_:
                 line.add_token("", TokenClass.NEW_LINE, "Extras")
             line_number+=1
             if line.has_error:
-                print("Error at [line", line.line_number, "]")
-                print("ERROR:", line.error)
                 self.has_error = True
+                self.lines.append(line)
                 break
             self.lines.append(line)
         line = Line(line_number, "", comment_continue, False)
@@ -58,16 +57,20 @@ class Lexer_:
             self.has_error = True
             line.error = "The multi line comment has not been ended."
             line.has_error = True
-            print("Error at [line", line.line_number, "]")
-            print("ERROR:", line.error)
+            self.lines.append(line)
         for i in range(depth_indent):
-            line.add_token("", TokenClass.END_INDENT, "Extras")
+            line.add_token("", TokenClass.DEDENT, "Extras")
         line.add_token("", TokenClass.EOF, "Extras")
         self.lines.append(line)
 
     def print_lexemes(self):
         for line in self.lines:
-            line.print_lexemes()
+            if line.has_error:
+                print("Error at [line", line.line_number, "]")
+                print("ERROR:", line.error)
+                print()
+            else:
+                line.print_lexemes()
 
 if __name__ == "__main__":
     file_path = sys.argv[1]
