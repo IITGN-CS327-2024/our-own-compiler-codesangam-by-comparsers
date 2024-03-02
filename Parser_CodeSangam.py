@@ -12,12 +12,11 @@ class OurLexer(Lexer):
         lexer.classify_lexemes()
         for line in lexer.lines:
             for token in line.token_list:
-                yield Token(token.type, token.content)
+                yield Token(str(token.type)[11:], token.content)
 
 # Grammer for Parsing
 grammer = '''
-    start: COMMENT_MARKER
-    %declare COMMENT_MARKER
+    start: 
 '''
 
 if __name__ == "__main__":
