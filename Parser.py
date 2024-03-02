@@ -1,14 +1,27 @@
-from Lexer import *
+from Lexer_CodeSangam import *
 from Line import *
+from lark import Lark
+from lark.lexer import Lexer, Token 
 
-class Parser:
+class OurLexer(Lexer):
+    def __init__(self, lexer_conf):
+        pass
 
-    def __init__(self,file_path):
-        self.file_path = file_path
-        self.lexer = Lexer(file_path)       
+    def lex(self, data):
+        lexer = Lexer_(data)
+        lexer.classify_lexemes()
+        for line in lexer.lines:
+            for token in line.token_list:
+                yield Token(token.type, token.content)
+
+# Grammer for Parsing
+grammer = '''
+    start: COMMENT_MARKER
+    %declare COMMENT_MARKER
+'''
 
 if __name__ == "__main__":
     file_path = sys.argv[1]
-    parser = Parser(file_path)
-    parser.lexer.classify_lexemes()
-    parser.lexer.print_tokens()
+    parser = Lark(grammer, lexer=OurLexer)
+    tree = parser.parse(file_path)
+    print(tree)
