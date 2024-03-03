@@ -224,8 +224,7 @@ Add  `$$` before every line to consider it as a comment line.
 For multi line comment, add `$#` at start and `#$` at end of the comment.
 
 ## General Rules
-Precedence order:
-
+#Precedence order: 
 High to low
 
 Unary operator (ou)
@@ -238,5 +237,5 @@ Comparators (comparators)
 
 Logical operators (ol)
 
-Associativity :
+#Associativity :
 Left for all operators
