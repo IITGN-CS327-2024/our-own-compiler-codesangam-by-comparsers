@@ -117,7 +117,7 @@ if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
     parse_tree = parser.parse(file_path)
-    print(parse_tree)
+    print(parse_tree.pretty())
 
     def make_png(filename):
         tree.pydot__tree_to_png( parse_tree, filename)
