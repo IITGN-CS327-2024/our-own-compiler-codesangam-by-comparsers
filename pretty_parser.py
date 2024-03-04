@@ -2,8 +2,7 @@ from Lexer_CodeSangam import *
 from Line import *
 from lark import Lark
 from lark.lexer import Lexer, Token 
-from lark.tree import pydot__tree_to_png
-from IPython.display import Image
+
 
 
 class OurLexer(Lexer):
@@ -120,14 +119,7 @@ if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
     tree = parser.parse(file_path)
-    def make_png(filename):
-        tree.pydot__tree_to_png( parser.parse(file_path), filename)
-
-    def make_dot(filename):
-        tree.pydot__tree_to_dot( parser.parse(file_path), filename)
-
-
-    print(parser.parse(file_path).pretty())
+    print(tree.pretty())
     
    
     
