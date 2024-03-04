@@ -224,3 +224,18 @@ Add  `$$` before every line to consider it as a comment line.
 For multi line comment, add `$#` at start and `#$` at end of the comment.
 
 ## General Rules
+Precedence order: 
+High to low
+
+Unary operator (ou)
+
+Bitwise operator (obi)
+
+Binary operator (ob)
+
+Comparators (comparators)
+
+Logical operators (ol)
+
+Associativity :
+Left for all operators

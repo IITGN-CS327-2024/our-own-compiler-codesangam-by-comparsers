@@ -11,7 +11,7 @@ karya num gradedown():
 karya num main():
     $$ Using Let Statements
     print((let num a = 56 in a) * (let num a = 6 in 2*a))
-    print(let str name = “Dhruv” in (“My name is “+name))
+    print(let str name = "Dhruv" in ("My name is" +name))
 
     $$ Using Exceptions
     koshish:
