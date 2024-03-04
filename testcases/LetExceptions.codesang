@@ -1,14 +1,14 @@
 $$ Test program for Let Statements and Exceptions in CodeSangam
 
-num compilerProject():
+karya num compilerProject():
     print("Working hard for compiler project")
     vapas 0
 
-num gradedown():
+karya num gradedown():
     print("Not working hard for compiler project")
     vapas 0
 
-num main():
+karya num main():
     $$ Using Let Statements
     print((let num a = 56 in a) * (let num a = 6 in 2*a))
     print(let str name = “Dhruv” in (“My name is “+name))

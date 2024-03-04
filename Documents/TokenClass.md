@@ -6,7 +6,7 @@
 
 2. **Paranthesis:**
    - LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE, LEFT_SQUARE, RIGHT_SQUARE, DICT_LEFT, DICT_Right
-   - **Regular Language:** `\(|\)|\{|\}|\[|\]|\\\[|\\\]`
+   - **Regular Language:** `(|)|{|}|[|]|\[|\]`
 
 3. **Punctuations:**
    - COMMA, DOT, COLON, SEMI

@@ -1,6 +1,6 @@
 $$ Wrong Test Case in CodeSangam Language
 
-var add = kholiye num (num: num1, num: num2):
+num add = kholiye num (num: num1, num: num2):
     vapas num1 + num2
 
 karya num doClosure():
@@ -21,14 +21,14 @@ karya num gradedown():
     print("Not working hard for compiler project")
     vapas 0
 
-karya num calculateRectangleArea(num length, num width):
+karya num calculateRectangleArea(num: length, num: width):
     num area = length * width
     vapas area
 
-karya bool isPass(num marks):
+karya bool isPass(num : marks):
     agar (marks > 80):
         $$ string is not closed
-        print("Pass) 
+        print("Pass") 
         vapas Sahi
     magar (marks > 30 && marks <= 80):
         print("Re-exam")
@@ -37,24 +37,29 @@ karya bool isPass(num marks):
         print("Fail")
         vapas Galat
 
-num main():
+karya num main():
     $$ Intentional Error: Undefined function 'whoAmI'
     whoAmI()
 
     $$ Intentional Error: Redefining variable 'add'
-    var add = 10
+    num add = 10
 
     $$ Intentional Error: Using undefined variable 'undefVar'
     print(undefVar)
 
+    $$ This is not allowed. Do this in place a[2, 2] = 2
+    a[2][2] = 2
+
     $$ Intentional Error: Invalid syntax in 'agar' condition
-    agar (marks > 80)
+    agar (marks > 80):
         print("Pass")
-    nahitoh:
+    nahitoh
         print("Fail")
+    magar: 
+        a = b
 
     $$ Intentional Error: Incorrect loop syntax
-    keliye num i = 1; i < 5; i++:
+    keliyen num i = 1; i < 5; i++:
         print("Iteration: ", i)
 
     $$ Intentional Error: Mismatched types in assignment
@@ -62,5 +67,8 @@ num main():
 
     $$ Intentional Error: Invalid function call with incorrect arguments
     bool result = isPass("Invalid")
+
+    $$ Error
+    a = b = c
 
     vapas 0

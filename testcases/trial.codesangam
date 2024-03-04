@@ -1,2 +1,12 @@
-85 + Dhruv + 18 \;
+$$ Test program for loops and function in CodeSangam
 
+karya bool isPass(num:marks):
+    agar (marks > 80):
+        print("Pass")
+        vapas Sahi
+    magar (marks > 30 && marks <= 80):
+        print("Re-exam")
+        vapas Sahi
+    nahitoh:
+        print("Fail")
+        vapas Galat

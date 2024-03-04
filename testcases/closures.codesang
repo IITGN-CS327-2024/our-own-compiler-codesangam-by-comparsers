@@ -1,6 +1,6 @@
 $$ Test program for closures in CodeSangam
 
-var add = kholiye num (num: num1, num: num2):
+num add = kholiye num (num: num1, num: num2):
     vapas num1 + num2
 
 karya num doClosure():
@@ -13,7 +13,7 @@ karya num doClosure():
 
     vapas 0
 
-num main():
+karya num main():
     doClosure()
     vapas 0
 
@@ -21,5 +21,3 @@ $$$ Hello $$
 
 This is a 
 multiline comment$$$
-
-"This will be treated as a string"

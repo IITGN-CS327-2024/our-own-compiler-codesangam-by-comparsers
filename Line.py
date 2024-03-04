@@ -274,7 +274,8 @@ class Line:
                         self.back()
                         self.add_token(c, TokenClass.EQUAL, "Assignment Operator")
                 case '<':
-                    if self.token_list[len(self.token_list)-1].parent_type == "Key Word":
+                    token = self.token_list[len(self.token_list)-1]
+                    if token.parent_type=="Key Word" or token.parent_type=="Type Specifier Mark" or token.type==TokenClass.COMMA:
                         self.add_token(c, TokenClass.SPECIFIER_START, "Type Specifier Mark")
                     elif self.advance()=='=':
                         self.add_token("<=", TokenClass.LESS_EQUAL, "Conditional Operator")
@@ -282,7 +283,8 @@ class Line:
                         self.back()
                         self.add_token(c, TokenClass.LESS, "Conditional Operator")
                 case '>':
-                    if self.token_list[len(self.token_list)-1].parent_type == "Key Word":
+                    token = self.token_list[len(self.token_list)-1]
+                    if token.parent_type=="Key Word" or token.parent_type=="Type Specifier Mark":
                         self.add_token(c, TokenClass.SPECIFIER_END, "Type Specifier Mark")
                     elif self.advance()=='=':
                         self.add_token(">=", TokenClass.GREATER_EQUAL, "Conditional Operator")

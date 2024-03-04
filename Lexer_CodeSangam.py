@@ -9,6 +9,7 @@ class Lexer_:
         self.line_start = 0
         self.line_current = 0
         self.has_error = False
+        self.stack = []
     
     def classify_lexemes(self):
         file_contents = ""
@@ -32,17 +33,29 @@ class Lexer_:
             if all(char.isspace() or char=='\t' for char in single_line):
                 line_number+=1
                 continue
-            
             line = Line(line_number, single_line, comment_continue, True)
-            if line.indentation>previous_indent:
+            if comment_continue:
+                line.indentation = previous_indent
+            if line.indentation>previous_indent and not line.comment_on:
                 new_token = Token("", TokenClass.INDENT, "Extras")
                 line.token_list.insert(0, new_token)
+                self.stack.append(line.indentation - previous_indent)
                 depth_indent+=1
-            if line.indentation<previous_indent:
-                new_token = Token("", TokenClass.DEDENT, "Extras")
-                line.token_list.insert(0, new_token)
-                depth_indent-=1
-            previous_indent = line.indentation
+            if line.indentation<previous_indent and not line.comment_on:
+                current_indent = line.indentation
+                while current_indent < previous_indent:
+                    new_token = Token("", TokenClass.NEW_LINE, "Extras")
+                    line.token_list.insert(0, new_token)
+                    new_token = Token("", TokenClass.DEDENT, "Extras")
+                    line.token_list.insert(0, new_token)
+                    depth_indent-=1
+                    current_indent+=self.stack[-1]
+                    self.stack = self.stack[:-1]
+                if current_indent!=previous_indent:
+                    line.has_error = True
+                    line.error = "Improper Indentation"
+            if not line.comment_on:
+                previous_indent = line.indentation
             comment_continue = line.comment_on
             if not comment_continue:
                 line.add_token("", TokenClass.NEW_LINE, "Extras")
@@ -60,6 +73,7 @@ class Lexer_:
             self.lines.append(line)
         for i in range(depth_indent):
             line.add_token("", TokenClass.DEDENT, "Extras")
+            line.add_token("", TokenClass.NEW_LINE, "Extras")
         line.add_token("", TokenClass.EOF, "Extras")
         self.lines.append(line)
 

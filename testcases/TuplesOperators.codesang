@@ -1,12 +1,12 @@
 $$ Test program for Tuple, Number, Logical, Bitwise, and String Operations in CodeSangam
 
-tup<var> t1 = ["abc", Gaalat, 79]
-tup<num> t2 = [12, 0, 79]
+tup<str> t1 = {"abc", Galat, 79}
+tup<num> t2 = {12, 0, 79}
 
-num main():
+karya num main():
     $$ Tuple operations
-    num count = t1.count(1)
-    var element = t1.access(1)
+    num c = t1.count(1)
+    num element = t1.access(1)
     num length = t1.len()
 
     $$ Number operations

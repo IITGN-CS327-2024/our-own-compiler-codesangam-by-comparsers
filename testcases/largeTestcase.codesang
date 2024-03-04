@@ -1,5 +1,5 @@
 $$ Large Test Case in CodeSangam Language
-var add = kholiye num (num: num1, num: num2):
+num add = kholiye num (num: num1, num: num2):
     vapas num1 + num2
 
 karya num doClosure():
@@ -20,11 +20,11 @@ karya num gradedown():
     print("Not working hard for compiler project")
     vapas 0
 
-karya num calculateRectangleArea(num length, num width):
+karya num calculateRectangleArea(num: length, num: width):
     num area = length * width
     vapas area
 
-karya bool isPass(num marks):
+karya bool isPass(num: marks):
     agar (marks > 80):
         print("Pass")
         vapas Sahi
@@ -35,7 +35,7 @@ karya bool isPass(num marks):
         print("Fail")
         vapas Galat
         
-num main():
+karya num main():
     $$ closures
     doClosure()
 
@@ -46,18 +46,18 @@ num main():
     $$ Using Exceptions
     koshish:
         compilerProject()
-    warna:
+    varna:
         gradedown()
 
-    num count = 0
+    num c = 0
     keliye (num i = 1; i < 5; i++, j++):
         print("Iteration: ", i)
-        count += 1
+        c += 1
 
-    count=0
-    jabtak (count < 3):
-        print("Count: ", count)
-        count += 1
+    c=0
+    jabtak (c < 3):
+        print("Count: ", c)
+        c += 1
 
     $$ Function call
     bool result = isPass(75)
@@ -68,13 +68,13 @@ num main():
     bool isStudent = Sahi
 
     $$ Dictionary
-    dict<num, str> studentInfo = [1: "Shraddha", 2: "Tripti", 3: "Ananya"]
+    dict<num, str> studentInfo = \[1: "Shraddha", 2: "Tripti", 3: "Ananya"\]
 
     $$ Function calls
-    studentInfo[4] = "Shanaya"  // if str
-    studentInfo[5] = 2346  // if num/bool
+    studentInfo[4] = "Shanaya"  $$ if str
+    studentInfo[5] = 2346  $$ if num/bool
     keysList = studentInfo.keys()
-    studentInfo.pop(2)
+    a = studentInfo.pop(2)
     valuesList = studentInfo.val()
     copiedDict = studentInfo.copy()
     num numKeys = studentInfo.len()
@@ -83,52 +83,52 @@ num main():
     list<str> namesList = ["Hirva", "Disha", "Dhruv", "Shubh"]
 
     $$ List operations
-    namesList.append(123)  // if num/bool/var
-    namesList.append("str")  // if str
-    namesList.insert(0, 24)  // inserts 24 at 1st position
+    a = namesList.append(123)  $$ if num/bool/var
+    a = namesList.append("str")  $$ if str
+    a = namesList.insert([0], 24)  $$ inserts 24 at 1st position
     otherList = ["Joey", "Jane"]
-    namesList.join(otherList)
+    a = namesList.join(otherList)
     sumResult = sum(namesList)
     listLen = namesList.len()
     occurrences = namesList.count(1)
     element = namesList.access(2)
     slicedList = namesList.slice(1:4)
-    namesList.pop(5)  // removes the 5-indexed element from the list
+    a = namesList.pop(5)  $$ removes the 5-indexed element from the list
 
     $$ Tuple
-    tup<var> mixedTuple = ["abc", Gaalat, 79]  // allows different datatypes in its content
-    tup<num> numberTuple = [12, 0, 79]  // can only contain one type of datatype
+    tup<num> mixedTuple = ["abc", Galat, 79]  $$ allows different datatypes in its content
+    tup<num> numberTuple = [12, 0, 79]  $$ can only contain one type of datatype
 
     $$ Tuple operations
-    countRes = mixedTuple.count(1)  // counts occurrences of 1
-    accessRes = mixedTuple.access(1)  // access 1-indexed element
-    tupleLen = mixedTuple.len()  // returns the length of the tuple
+    countRes = mixedTuple.count(1)  $$ counts occurrences of 1
+    accessRes = mixedTuple.access(1)  $$ access 1-indexed element
+    tupleLen = mixedTuple.len()  $$ returns the length of the tuple
 
     $$ Number operations
-    num garbage = 5  // garbage values
-    convNum = int(garbage)  // will assign integer value of garbage to convNum, the datatype will remain num
+    num garbage = 5  $$ garbage values
+    convNum = int(garbage)  $$ will assign integer value of garbage to convNum, the datatype will remain num
     addRes = convNum + 10
     mulRes = convNum * 5
     subRes = convNum - 3
     divRes = convNum / 2
-    unaryRes = convNum += 5  // unary operator
-    inteDivRes = convNum // 3  // integer divide
-    expRes = convNum ** 2  // exponent (raised to the power 2)
-    remRes = convNum % 3  // returns remainder
+    unaryRes = convNum ++ + 5  $$ unary operator
+    inteDivRes = convNum $$ 3  $$ integer divide
+    expRes = convNum ** 2  $$ exponent (raised to the power 2)
+    remRes = convNum % 3  $$ returns remainder
 
     $$ Logical Operators
-    bool isValid = Sahi && Galat  // and
-    bool isOrValid = Sahi || Galat  // or
-    notValid = ~isValid  // not
+    bool isValid = Sahi && Galat  $$ and
+    bool isOrValid = Sahi || Galat  $$ or
+    notValid = ~isValid  $$ not
 
     $$ Bitwise Operators
-    res_bitwise_and = convNum & 7  // bitwise and
-    bitwiseOrResult = convNum | 3  // bitwise or
-    bitwiseXorResult = convNum ^ 4  // bitwise xor
+    res_bitwise_and = convNum & 7  $$ bitwise and
+    bitwiseOrResult = convNum | 3  $$ bitwise or
+    bitwiseXorResult = convNum ^ 4  $$ bitwise xor
 
     $$ String Operations
-    concatenatedString = name + " Doe"  // concatenate
-    slicedString = name.slice(1:3)  // slicing
+    concatenatedString = name + " Doe"  $$ concatenate
+    slicedString = name.slice(1:3)  $$ slicing
 
     $$ Conditional Operators
     lessThanResult = convNum < 8
@@ -179,7 +179,7 @@ num main():
     print("Not Equal Result:", notEqualResult)
 
     $$ printing Fibonacci numbers
-    num n = 10  // Adjust the value of 'n' to print the desired number of Fibonacci numbers
+    num n = 10  $$ Adjust the value of 'n' to print the desired number of Fibonacci numbers
     num a = 0
     num b = 1
 
