@@ -1,6 +1,6 @@
 from Lexer_CodeSangam import *
 from Line import *
-from lark import Lark
+from lark import Lark, tree
 from lark.lexer import Lexer, Token 
 
 class OurLexer(Lexer):
@@ -20,11 +20,7 @@ class OurLexer(Lexer):
                     if token.type != TokenClass.COMMENT and token.type != TokenClass.COMMENT_MARKER:
                         yield Token(str(token.type)[11:], token.content)
 
-# Grammar for Parsing
-                        
-
-# el: LEFT_PAREN el RIGHT_PAREN | el ol el | ea comparators ea | SAHI | GALAT | IDENTIFIER
- 
+# Grammar for Parsing 
 grammar = '''
 start: line_temp EOF
 
@@ -116,5 +112,10 @@ closure: data_types IDENTIFIER EQUAL KHOLIYE func_data_types LEFT_PAREN argument
 if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
-    tree = parser.parse(file_path)
-    print(tree)
+    parse_tree = parser.parse(file_path)
+    print(parse_tree.pretty())
+
+    def make_png(filename):
+        tree.pydot__tree_to_png( parse_tree, filename)
+    if (len(sys.argv)>=3):
+        make_png(sys.argv[2])
