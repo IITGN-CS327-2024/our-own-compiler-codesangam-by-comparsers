@@ -10,8 +10,13 @@ This repo contains content developed as we build our own compiler for our custom
 
 # Instructions for running the programs
 
-## Lexer.py
+## Lexer_CodeSangam.py
 
 This file identifies the different tokens in the program file line by line and classify them in different categories. Categories and its members can be seen in `Documents/TokenClass.md`.  
 
-Run the following command to use Lexer.py to classify the lexems: `python Lexer.py <file_path>`.  
+Run the following command to use Lexer_CodeSangam.py to classify the lexems: `python Lexer_CodeSangam.py <file_path>`.  
+
+## Parser_CodeSangam.py
+This file has the code for the parser that uses Lark LALR parser to for the tree.
+Run The following commend to use the Parser_CodeSangam.py to parse the code and see the tree: `python Parser_CodeSangam.py <file_path>`.
+
