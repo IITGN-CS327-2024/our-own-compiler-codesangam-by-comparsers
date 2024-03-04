@@ -1,9 +1,7 @@
 from Lexer_CodeSangam import *
 from Line import *
-from lark import Lark
+from lark import Lark, tree
 from lark.lexer import Lexer, Token 
-
-
 
 class OurLexer(Lexer):
     def __init__(self, lexer_conf):
@@ -118,9 +116,9 @@ closure: data_types IDENTIFIER EQUAL KHOLIYE func_data_types LEFT_PAREN argument
 if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
-    tree = parser.parse(file_path)
-    print(tree.pretty())
-    
-   
-    
+    parse_tree = parser.parse(file_path)
+    print(parse_tree)
 
+    def make_png(filename):
+        tree.pydot__tree_to_png( parse_tree, filename)
+    make_png(sys.argv[2])
