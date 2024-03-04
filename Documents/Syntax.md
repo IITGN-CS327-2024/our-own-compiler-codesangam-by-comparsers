@@ -110,6 +110,7 @@ String Operations:
 ```codesangam
 str c = a+b		    //concatenate
 str c = a.slice(1:3)	//slicing
+str a = str(13) //converting int to string
 ```
 Conditional Operators:  Used for comparison between 2 operands/ expressions.
 ```codesangam
