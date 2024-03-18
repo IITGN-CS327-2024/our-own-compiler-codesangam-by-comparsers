@@ -110,8 +110,12 @@ class OurTransformer(lark.Transformer):
     
     def e9(self, children):
         children = remove_none(children)
+        newchildren = []
         if len(children)!=1:
-            return ast_classes.e9(children)
+            for child in children:
+                if (child!="." and child!="(" and child!=")" and child!="[" and child!="]"):
+                    newchildren.append(child) 
+            return ast_classes.e9(newchildren)           
         return children
     
     def data_types(self, children):
