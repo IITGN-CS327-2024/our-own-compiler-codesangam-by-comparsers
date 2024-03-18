@@ -2,6 +2,8 @@ from Lexer_CodeSangam import *
 from Line import *
 from lark import Lark, tree
 from lark.lexer import Lexer, Token 
+from AST_CodeSangam import *
+from graphviz import Digraph
 
 class OurLexer(Lexer):
     def __init__(self, lexer_conf):
@@ -27,7 +29,7 @@ start: line_temp EOF
 line: statement NEW_LINE | NEW_LINE
 line_temp: line line_temp |
 
-statement: assignment | print | ifelse | while | for | tryelse | function | closure | function_call | return | INDENT DEDENT
+statement: assignment | print | ifelse | while_loop | for_loop | tryelse | function | closure | function_call | return_func | INDENT DEDENT
 
 # Expression
 e: let | e1
@@ -70,7 +72,6 @@ access_temp: temp a_temp | a_temp
 a_temp: COMMA temp a_temp | 
 num_temp: NUMBER n_temp | n_temp
 n_temp: COMMA NUMBER n_temp | 
-temp_: NUMBER | STRING | ed | els | et | SAHI | GALAT 
 all_equal: EQUAL | PLUS_EQUAL | MINUS_EQUAL | MULT_EQUAL | DIV_EQUAL 
 
 print: PRINT LEFT_PAREN print_body RIGHT_PAREN
@@ -79,25 +80,27 @@ print_temp: COMMA all_e print_temp |
 
 input: INPUT LEFT_PAREN STRING COMMA data_types RIGHT_PAREN
 
-let: LET assignment IN e1
+let: LET assignment IN all_e
 
-ifelse: AGAR LEFT_PAREN e RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT NEW_LINE magar_temp nahitoh_temp
-magar_temp: MAGAR LEFT_PAREN e RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT NEW_LINE magar_temp |  
+ifelse: AGAR LEFT_PAREN condition RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT NEW_LINE magar_temp nahitoh_temp
+magar_temp: MAGAR LEFT_PAREN condition RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT NEW_LINE magar_temp |  
 nahitoh_temp: NAHITOH COLON NEW_LINE INDENT line_temp DEDENT |  
 
-while: JABTAK LEFT_PAREN e RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT nahitoh_temp
+while_loop: JABTAK LEFT_PAREN all_e RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT nahitoh_temp
 
-for: KELIYE LEFT_PAREN assignment SEMI e SEMI update RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT nahitoh_temp
-update: e update_temp | update_temp
-update_temp: COMMA e update_temp | 
+for_loop: KELIYE LEFT_PAREN assignment SEMI condition SEMI update RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT nahitoh_temp
+update: all_e update_temp | update_temp
+update_temp: COMMA all_e update_temp | 
+condition: all_e
 
-tryelse: KOSHISH COLON NEW_LINE INDENT line_temp DEDENT NEW_LINE VARNA COLON NEW_LINE INDENT line_temp DEDENT 
+tryelse: KOSHISH COLON NEW_LINE INDENT line_temp DEDENT NEW_LINE varna
+varna: VARNA COLON NEW_LINE INDENT line_temp DEDENT 
 
 function: KARYA func_data_types IDENTIFIER LEFT_PAREN arguments RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT
 arguments: data_types COLON IDENTIFIER args | args
 args: COMMA data_types COLON IDENTIFIER args |  
 func_data_types: data_types | VOID
-return: VAPAS return_type
+return_func: VAPAS return_type
 return_type: all_e | 
 
 function_call: IDENTIFIER LEFT_PAREN function_call_arguments RIGHT_PAREN 
@@ -109,13 +112,33 @@ closure: data_types IDENTIFIER EQUAL KHOLIYE func_data_types LEFT_PAREN argument
 %declare DICT_RIGHT DICT_LEFT IN NUM BOOL STR VAR SAHI GALAT DICT LIST TUP ARR INT FLOAT PRINT INPUT AGAR MAGAR NAHITOH NIKLO KELIYE JABTAK KARYA VAPAS VOID KHOLIYE LET KOSHISH VARNA LEN SLICE COUNT ACCESS APPEND INSERT JOIN SUM POP KEYS VAL COPY LEFT_PAREN RIGHT_PAREN LEFT_BRACE RIGHT_BRACE LEFT_SQUARE RIGHT_SQUARE COMMA DOT COLON SEMI EOF INDENT DEDENT NEW_LINE PLUS PLUS_EQUAL MINUS MINUS_EQUAL MULT MULT_EQUAL DIV DIV_EQUAL INT_DIV EXP MODULO BANG_EQUAL EQUAL_EQUAL GREATER GREATER_EQUAL LESS LESS_EQUAL PLUS_PLUS MINUS_MINUS BANG AND_AND OR_OR OR XOR AND SPECIFIER_START SPECIFIER_END EQUAL IDENTIFIER STRING NUMBER
 '''
 
+def tree_to_graphviz(tree, graph=None):
+
+    if graph is None:
+        graph = Digraph()
+
+    if isinstance(tree, ast_classes.ASTNode):
+        graph.node(str(id(tree)), label=str(tree))
+        children = vars(tree).items()
+        for _,child in children:
+            if isinstance(child, ast_classes.ASTNode):
+                graph.node(str(id(child)), label = str(child))
+                graph.edge(str(id(tree)), str(id(child)))
+                tree_to_graphviz(child, graph)
+
+            else:
+                graph.node(str(id(child)), label=str(child))
+                graph.edge(str(id(tree)), str(id(child)))
+    return graph
+
 if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
     parse_tree = parser.parse(file_path)
-    print(parse_tree.pretty())
-
-    def make_png(filename):
-        tree.pydot__tree_to_png( parse_tree, filename)
+    # print(parse_tree.pretty())
+    transformer = OurTransformer()
+    ast = transformer.transform(parse_tree)
+    graph = tree_to_graphviz(ast)
+    graph.render('ASTs/{}'.format(file_path[10:-11]),format='png', view=True)
     if (len(sys.argv)>=3):
-        make_png(sys.argv[2])
+        tree.pydot__tree_to_png( parse_tree, sys.argv[2])
