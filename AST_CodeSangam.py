@@ -113,7 +113,7 @@ class OurTransformer(lark.Transformer):
         newchildren = []
         if len(children)!=1:
             for child in children:
-                if (child!="." and child!="(" and child!=")" and child!="[" and child!="]"):
+                if (child!="." and child!="(" and child!=")" and child!="[" and child!="]" and child!=","):
                     newchildren.append(child) 
             return ast_classes.e9(newchildren)           
         return children
