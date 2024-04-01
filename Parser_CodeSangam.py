@@ -33,15 +33,15 @@ statement: assignment | print | ifelse | while_loop | for_loop | tryelse | funct
 
 # Expression
 e: let | e1
-e1: e1 ol e2 | BANG e2 | e2
-e2: e2 comparators e3 | e3
+e1: e1 ol e2 | e2
+e2: e2 comparators e3 | e3 | BANG e3
 e3: e3 PLUS e4 | e3 MINUS e4 | e4
 e4: e4 ob e5 | e5
 e5: e5 EXP e6 | e6
 e6: e6 obi e7 | e7
 e7: ou e7 | e8
 e8: e8 ou | e9
-e9: NUMBER | STRING | SAHI | GALAT | IDENTIFIER | LEFT_PAREN e RIGHT_PAREN | IDENTIFIER DOT COUNT LEFT_PAREN all_e RIGHT_PAREN | IDENTIFIER DOT LEN LEFT_PAREN RIGHT_PAREN | SUM LEFT_PAREN IDENTIFIER RIGHT_PAREN | INT LEFT_PAREN e RIGHT_PAREN | FLOAT LEFT_PAREN e RIGHT_PAREN | STR LEFT_PAREN e RIGHT_PAREN | IDENTIFIER DOT SLICE LEFT_PAREN e COLON e RIGHT_PAREN | IDENTIFIER DOT ACCESS LEFT_PAREN num_temp RIGHT_PAREN | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE | IDENTIFIER DOT POP LEFT_PAREN access_temp RIGHT_PAREN | IDENTIFIER DOT KEYS LEFT_PAREN RIGHT_PAREN | IDENTIFIER DOT VAL LEFT_PAREN RIGHT_PAREN | IDENTIFIER DOT JOIN LEFT_PAREN IDENTIFIER RIGHT_PAREN | IDENTIFIER DOT INSERT LEFT_PAREN els COMMA all_e RIGHT_PAREN | IDENTIFIER DOT APPEND LEFT_PAREN all_e RIGHT_PAREN | IDENTIFIER DOT COPY LEFT_PAREN RIGHT_PAREN | function_call
+e9: MINUS NUMBER | NUMBER | STRING | SAHI | GALAT | IDENTIFIER | LEFT_PAREN e RIGHT_PAREN | IDENTIFIER DOT COUNT LEFT_PAREN all_e RIGHT_PAREN | IDENTIFIER DOT LEN LEFT_PAREN RIGHT_PAREN | SUM LEFT_PAREN IDENTIFIER RIGHT_PAREN | INT LEFT_PAREN e RIGHT_PAREN | FLOAT LEFT_PAREN e RIGHT_PAREN | STR LEFT_PAREN e RIGHT_PAREN | IDENTIFIER DOT SLICE LEFT_PAREN e COLON e RIGHT_PAREN | IDENTIFIER DOT ACCESS LEFT_PAREN num_temp RIGHT_PAREN | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE | IDENTIFIER DOT POP LEFT_PAREN access_temp RIGHT_PAREN | IDENTIFIER DOT KEYS LEFT_PAREN RIGHT_PAREN | IDENTIFIER DOT VAL LEFT_PAREN RIGHT_PAREN | IDENTIFIER DOT JOIN LEFT_PAREN IDENTIFIER RIGHT_PAREN | IDENTIFIER DOT INSERT LEFT_PAREN els COMMA all_e RIGHT_PAREN | IDENTIFIER DOT APPEND LEFT_PAREN all_e RIGHT_PAREN | IDENTIFIER DOT COPY LEFT_PAREN RIGHT_PAREN | function_call
 ob: MULT | DIV | INT_DIV | MODULO  
 ou: PLUS_PLUS | MINUS_MINUS 
 obi: AND | OR | XOR 
@@ -49,14 +49,14 @@ ol: AND_AND | OR_OR
 comparators: BANG_EQUAL | EQUAL_EQUAL | GREATER | LESS | GREATER_EQUAL | LESS_EQUAL
 
 ed: DICT_LEFT dict_body DICT_RIGHT
-dict_body: dict_element dict_temp | dict_temp
+dict_body: dict_element dict_temp | 
 dict_temp: COMMA dict_element dict_temp |  
 dict_element: key COLON value
 key: NUMBER | STRING
 value: NUMBER | STRING | SAHI | GALAT | ed | els | et
 
 els: LEFT_SQUARE list_body RIGHT_SQUARE
-list_body: list_element list_temp | list_temp
+list_body: list_element list_temp | 
 list_temp: COMMA list_element list_temp  |
 list_element: value
 
@@ -68,14 +68,14 @@ data_types: NUM | STR | BOOL | DICT SPECIFIER_START data_types COMMA data_types 
 
 assignment: IDENTIFIER all_equal all_e| IDENTIFIER all_equal input | data_types IDENTIFIER EQUAL all_e | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE all_equal all_e
 temp: NUMBER | STRING 
-access_temp: temp a_temp | a_temp
+access_temp: temp a_temp
 a_temp: COMMA temp a_temp | 
-num_temp: NUMBER n_temp | n_temp
+num_temp: NUMBER n_temp
 n_temp: COMMA NUMBER n_temp | 
 all_equal: EQUAL | PLUS_EQUAL | MINUS_EQUAL | MULT_EQUAL | DIV_EQUAL 
 
 print: PRINT LEFT_PAREN print_body RIGHT_PAREN
-print_body: all_e print_temp | print_temp
+print_body: all_e print_temp |
 print_temp: COMMA all_e print_temp |  
 
 input: INPUT LEFT_PAREN STRING COMMA data_types RIGHT_PAREN
@@ -89,7 +89,7 @@ nahitoh_temp: NAHITOH COLON NEW_LINE INDENT line_temp DEDENT |
 while_loop: JABTAK LEFT_PAREN all_e RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT nahitoh_temp
 
 for_loop: KELIYE LEFT_PAREN assignment SEMI condition SEMI update RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT nahitoh_temp
-update: all_e update_temp | update_temp
+update: all_e update_temp | 
 update_temp: COMMA all_e update_temp | 
 condition: all_e
 
@@ -97,14 +97,14 @@ tryelse: KOSHISH COLON NEW_LINE INDENT line_temp DEDENT NEW_LINE varna
 varna: VARNA COLON NEW_LINE INDENT line_temp DEDENT 
 
 function: KARYA func_data_types IDENTIFIER LEFT_PAREN arguments RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT
-arguments: data_types COLON IDENTIFIER args | args
+arguments: data_types COLON IDENTIFIER args |
 args: COMMA data_types COLON IDENTIFIER args |  
 func_data_types: data_types | VOID
 return_func: VAPAS return_type
 return_type: all_e | 
 
 function_call: IDENTIFIER LEFT_PAREN function_call_arguments RIGHT_PAREN 
-function_call_arguments: all_e input_args | input_args
+function_call_arguments: all_e input_args | 
 input_args: COMMA all_e input_args|  
 
 closure: data_types IDENTIFIER EQUAL KHOLIYE func_data_types LEFT_PAREN arguments RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
     parse_tree = parser.parse(file_path)
-    # print(parse_tree.pretty())
+    print(parse_tree.pretty())
     transformer = OurTransformer()
     ast = transformer.transform(parse_tree)
     graph = tree_to_graphviz(ast)
