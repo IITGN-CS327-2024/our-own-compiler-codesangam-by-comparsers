@@ -242,7 +242,7 @@ Associativity :
 Left for all operators
 
 ## Escape Sequences  
-\quotes : (")
-\single_quotes : (')
-\new_line: New Line
-\tab : tab space
+\quotes : "  
+\single_quotes : '  
+\new_line: New Line  
+\tab : tab space  
