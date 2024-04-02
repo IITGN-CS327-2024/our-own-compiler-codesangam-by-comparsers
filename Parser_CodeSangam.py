@@ -14,7 +14,7 @@ class OurLexer(Lexer):
         lexer.classify_lexemes()
         for line in lexer.lines:
             if line.has_error:
-                print("Error at [line", line.line_number, "]")
+                print("Error at [ line", line.line_number, "]")
                 print("ERROR:", line.error)
                 print()
             else:
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
     parse_tree = parser.parse(file_path)
-    print(parse_tree.pretty())
+    # print(parse_tree.pretty())
     transformer = OurTransformer()
     ast = transformer.transform(parse_tree)
     graph = tree_to_graphviz(ast)
