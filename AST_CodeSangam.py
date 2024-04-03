@@ -144,7 +144,7 @@ class OurTransformer(lark.Transformer):
     
     def ol(self, children):
         children = remove_none(children)
-        return ast_classes.ob(children)
+        return ast_classes.ol(children)
 
     def ou(self, children):
         children = remove_none(children)

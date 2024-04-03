@@ -121,6 +121,8 @@ def tree_to_graphviz(tree, graph=None):
         graph.node(str(id(tree)), label=str(tree))
         children = vars(tree).items()
         for _,child in children:
+            if _ == 'num_child':
+                continue
             if isinstance(child, ast_classes.ASTNode):
                 graph.node(str(id(child)), label = str(child))
                 graph.edge(str(id(tree)), str(id(child)))
