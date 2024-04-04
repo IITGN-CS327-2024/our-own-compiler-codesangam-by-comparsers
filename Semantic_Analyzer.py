@@ -76,16 +76,28 @@ def analyze_declare(line_node):
     else:
         error_msg = "Type of expression assigned does not match with the declared data type for variable '{}'.".format(identifier)
         error = Error(identifier.line, error_msg, 'Semantic Analyzer')
-        return False
-    
+
+def analyze_while(line_node):
+    cond = line_node.children1
+    match = analyze_expression(cond,bool)
+    if match:
+        scope_tree.create_scope()
+        for i in range(2,line_node.num_child):
+            line = getattr(line_node, "children{}".format(i))
+            res = analyze_line(line)
+        scope_tree.close_scope()
+    else:
+        error_msg = "Type of expression given as while condition is not of boolean type '{}'.".format(cond)
+        error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
+
 def analyze_assignment():
     return True
 
 def analyze_line(line_node):
     if isinstance(line_node, declaration):
         res = analyze_declare(line_node)
-    if isinstance(line_node, assignment):
-        res = analyze_assignment()
+    elif isinstance(line_node, while_loop):
+        res = analyze_while(line_node)
 
 def analyze_program(node):
     for i in range(node.num_child):
