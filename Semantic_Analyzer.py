@@ -66,6 +66,22 @@ def analyze_declare(line_node):
         error = Error(identifier.line, error_msg, 'Semantic Analyzer')
         return False
     
+def access_handler(var_type, node, line):
+    current_type = var_type
+    for i in range(node.num_child):
+        temp = getattr(node, "children{}".format(i))
+        if temp.type=="STRING":
+            if not isinstance(current_type, dict_type):
+                error = Error(line, "Invalid Access", 'Semantic Analyzer') 
+        if temp.type=="NUMBER":
+            if not (isinstance(current_type, dict_type) or isinstance(current_type, list_type)):
+                error = Error(line, "Invalid Access", 'Semantic Analyzer')
+        if isinstance(current_type, dict_type):
+            current_type = current_type.val_type
+        else:
+            current_type = current_type.element_type
+    return current_type
+
 def analyze_assignment(line_node):
     identifier = line_node.children0
     variable_type = scope_tree.type_variable(identifier)
@@ -96,6 +112,8 @@ def analyze_assignment(line_node):
         return True
     else:
         equal_type = line_node.children2.children0
+        access_node = line_node.children1
+        variable_type = access_handler(variable_type, access_node, line)
         if str(line_node.children3) == 'input_':
             data_type_node = line_node.children3.children1
             assign_type = get_type(data_type_node, line)
@@ -115,7 +133,6 @@ def analyze_assignment(line_node):
         if (equal_type=='-=' or equal_type=='/=' or equal_type=='*=') and variable_type!='num':
             error = Error(line, "The {} can only be used for num data_type".format(equal_type))
         return True
-=======
 
 def analyze_while(line_node):
     cond = line_node.children1
@@ -145,15 +162,55 @@ def analyze_for(line_node):
         error_msg = "Type of expression given as for condition is not of boolean type '{}'.".format(cond)
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
 
+def analyze_function(line_node):
+    func_name = line_node.children2
+    line = func_name.line
+    return_type = get_type(line_node.children1, line)
+    arg_node = line_node.children3
+    args = []
+    input_names = []
+    for i in range(0, arg_node.num_child, 2):
+        temp_type = get_type(getattr(arg_node, "children{}".format(i)), line)
+        args.append(temp_type)
+        var_name = getattr(arg_node, "children{}".format(i+1))
+        input_names.append(var_name)
+    function_type = func_type(args, return_type)
+    scope_tree.add_variable(func_name, function_type, line)
+    scope_tree.create_scope()
+    for i in range(len(args)):
+        scope_tree.add_variable(input_names[i], args[i], line)
+    for i in range(4, line_node.num_child):
+        in_line = getattr(line_node, "children{}".format(i))
+        res = analyze_line(in_line) 
+    scope_tree.close_scope()
 
-def analyze_assignment():
-    return True
+def analyze_function_call(line_node):
+    func_name = line_node.children0
+    line = func_name.line
+    arg_node = line_node.children1
+    func_type = scope_tree.type_variable(func_name)
+    if func_type==-1:
+        error = Error(line, "Function called before defining it.", 'Semantic Analyzer')
+    if arg_node.num_child > len(func_type.inputs):
+        error = Error(line, "Too many arguments for the function", 'Semantic Analyzer')
+    if arg_node.num_child < len(func_type.inputs):
+        error = Error(line, "Too few arguments for the function", 'Semantic Analyzer')
+    for i in range(arg_node.num_child): 
+        match = analyze_expression(getattr(arg_node, "children{}".format(i)), func_type.inputs[i])
+        if not match:
+            error = Error(line, "The argument at position {} doesnt matches with the defination of the function".format(i), 'Semantic Analyzer')
 
 def analyze_line(line_node):
     if isinstance(line_node, declaration):
         res = analyze_declare(line_node)
-    if isinstance(line_node, assignment):
-        res = analyze_assignment()
+    elif isinstance(line_node, assignment):
+        res = analyze_assignment(line_node)
+    elif isinstance(line_node, while_loop):
+        res = analyze_while(line_node)
+    elif isinstance(line_node, function):
+        res = analyze_function(line_node)
+    elif isinstance(line_node, function_call):
+        res = analyze_function_call(line_node)
 
 def analyze_program(node):
     for i in range(node.num_child):

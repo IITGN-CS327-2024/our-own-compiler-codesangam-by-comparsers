@@ -1,1 +1,5 @@
-list<num> a = 3
+karya num complierProject(bool: works):
+	num grade = 0
+    works = Galat
+
+complierProject()
