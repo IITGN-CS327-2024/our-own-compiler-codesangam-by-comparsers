@@ -144,6 +144,41 @@ def analyze_for(line_node):
         error_msg = "Type of expression given as for condition is not of boolean type '{}'.".format(cond)
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
 
+def analyze_if(line_node):
+    cond = line_node.children1
+    match = analyze_expression(cond,bool)
+    if match:
+        scope_tree.create_scope()
+        for i in range(2,line_node.num_child):
+            line = getattr(line_node, "children{}".format(i))
+            if isinstance(line,magar_temp):
+                scope_tree.close_scope()
+                scope_tree.create_scope()
+                if (line.num_child==0):
+                    continue
+                else:
+                    cond = line.children1
+                    match2 = analyze_expression(cond,bool)
+                    if match2:
+                        for i in range(2,line.num_child):
+                            line2 = getattr(line, "children{}".format(i))
+                            analyze_line(line2)
+                        scope_tree.close_scope()
+                    else:
+                        error_msg = "Type of expression given as elseif condition is not of boolean type '{}'.".format(cond)
+                        error = Error(line.children0.line, error_msg, 'Semantic Analyzer')
+            elif isinstance(line, nahitoh_temp):
+                scope_tree.create_scope()
+                for i in range(1,line.num_child):
+                    line3 = getattr(line, "children{}".format(i))
+                    analyze_line(line3)
+                scope_tree.close_scope()
+            else:
+                res = analyze_line(line)
+    else:
+        error_msg = "Type of expression given as if condition is not of boolean type '{}'.".format(cond)
+        error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
+
 
 def analyze_assignment():
     return True
@@ -152,11 +187,13 @@ def analyze_line(line_node):
     if isinstance(line_node, declaration):
         res = analyze_declare(line_node)
     if isinstance(line_node, assignment):
-        res = analyze_assignment()
+        res = analyze_assignment(line_node)
     if isinstance(line_node, while_loop):
-        res = analyze_while()
+        res = analyze_while(line_node)
     if isinstance(line_node, for_loop):
-        res = analyze_for()
+        res = analyze_for(line_node)
+    if isinstance(line_node, ifelse):
+        res = analyze_if(line_node)
 
 def analyze_program(node):
     for i in range(node.num_child):
