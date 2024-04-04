@@ -288,7 +288,7 @@ class OurTransformer(lark.Transformer):
         if len(children)==0:
             return None
         else:
-            children = [children[1]]
+            children = [children[1:]]
             return children
     
     def input(self, children):

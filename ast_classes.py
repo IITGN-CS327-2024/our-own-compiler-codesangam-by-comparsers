@@ -25,6 +25,7 @@ class line_temp(ASTNode):
         child = 0
         for i, child in enumerate(children):
             setattr(self, f'children{i}', child)
+            self.num_child+=1
 
 class line(ASTNode):
     def __init__(self, children):
@@ -44,10 +45,10 @@ class assignment(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         if len(children)==6:
-            self.num_child+=1
             indices_to_remove = [1, 3]
             children = [children[i] for i in range(len(children)) if i not in indices_to_remove]
         for i, child in enumerate(children):
+            self.num_child+=1
             setattr(self, f'children{i}', child)
     
 class declaration(ASTNode):
@@ -145,10 +146,10 @@ class datatype(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         if len(children)==6:
-            self.num_child+=1
             children = children[:3] + children[4:]
         for i, child in enumerate(children):
             setattr(self, f'children{i}', child)
+            self.num_child+=1
 
 class comparators(ASTNode):
     def __init__(self, children):
@@ -256,30 +257,30 @@ class ifelse(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         indices_to_remove = [1, 3, 4, 5, 6]
-        chilself.num_child+=1
-        dren = [children[i] for i in range(len(children)) if i not in indices_to_remove]
+        children = [children[i] for i in range(len(children)) if i not in indices_to_remove]
         children = children[:-4] + children[-2:]
         for i, child in enumerate(children):
+            self.num_child+=1
             setattr(self, f'child{i}', child)
 
 class magar_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         indices_to_remove = [1, 3, 4, 5, 6]
-        chilself.num_child+=1
-        dren = [children[i] for i in range(len(children)) if i not in indices_to_remove]
+        children = [children[i] for i in range(len(children)) if i not in indices_to_remove]
         children = children[:-3] + children[-1:]
         for i, child in enumerate(children):
+            self.num_child+=1
             setattr(self, f'child{i}', child)
 
 class nahitoh_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         indices_to_remove = [1, 2, 3]
-        chilself.num_child+=1
-        dren = [children[i] for i in range(len(children)) if i not in indices_to_remove]
+        children = [children[i] for i in range(len(children)) if i not in indices_to_remove]
         children = children[:-1]
         for i, child in enumerate(children):
+            self.num_child+=1
             setattr(self, f'child{i}', child)
 
 class update_temp(ASTNode):
@@ -329,10 +330,10 @@ class function(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         indices_to_remove = [3, 5, 6, 7, 8]
-        chilself.num_child+=1
-        dren = [children[i] for i in range(len(children)) if i not in indices_to_remove]
+        children = [children[i] for i in range(len(children)) if i not in indices_to_remove]
         children = children[:-1]
         for i, child in enumerate(children):
+            self.num_child+=1
             setattr(self, f'child{i}', child)
 
 class function_call_arguments(ASTNode):
@@ -434,20 +435,20 @@ class closure(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         indices_to_remove = [5, 7, 8, 9, 10]
-        chilself.num_child+=1
-        dren = [children[i] for i in range(len(children)) if i not in indices_to_remove]
+        children = [children[i] for i in range(len(children)) if i not in indices_to_remove]
         children = children[:-1]
         for i, child in enumerate(children):
+            self.num_child+=1
             setattr(self, f'child{i}', child)
 
 class tryelse(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         indices_to_remove = [1, 2, 3]
-        chilself.num_child+=1
-        dren = [children[i] for i in range(len(children)) if i not in indices_to_remove]
+        children = [children[i] for i in range(len(children)) if i not in indices_to_remove]
         children = children[:-4] + children[-2:]
         for i, child in enumerate(children):
+            self.num_child+=1
             setattr(self, f'child{i}', child)
 
 class varna(ASTNode):

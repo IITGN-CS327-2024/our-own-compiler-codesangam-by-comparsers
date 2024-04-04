@@ -4,23 +4,35 @@ from lark import Lark, tree
 from lark.lexer import Lexer, Token 
 from AST_CodeSangam import *
 from graphviz import Digraph
+from Semantic_Analyzer import *
+from error_handling import *
+import traceback
+import re
+
+current_line = 0
+last_token = "Start"
+has_error = False
 
 class OurLexer(Lexer):
     def __init__(self, lexer_conf):
         pass
 
     def lex(self, data):
+        global current_line
+        global has_error
+        global last_token
         lexer = Lexer_(data)
         lexer.classify_lexemes()
         for line in lexer.lines:
             if line.has_error:
-                print("Error at [ line", line.line_number, "]")
-                print("ERROR:", line.error)
-                print()
+                has_error = True
+                error = Error(line.line_number, line.error, 'Lexer')
             else:
+                current_line = line.line_number
                 for token in line.token_list:
                     if token.type != TokenClass.COMMENT and token.type != TokenClass.COMMENT_MARKER:
-                        yield Token(str(token.type)[11:], token.content)
+                        yield Token(str(token.type)[11:], token.content, line=line.line_number)
+                        last_token = token
 
 # Grammar for Parsing 
 grammar = '''
@@ -136,11 +148,24 @@ def tree_to_graphviz(tree, graph=None):
 if __name__ == "__main__":
     file_path = sys.argv[1]
     parser = Lark(grammar, parser='lalr', strict=True, lexer=OurLexer)
-    parse_tree = parser.parse(file_path)
+    try:
+        parse_tree = parser.parse(file_path)
+    except:
+        traceback_str = traceback.format_exc()
+        next_token = re.search(r"KeyError: '(.*?)'", traceback_str)
+        next_token = next_token.group(1)
+        expected_list = traceback_str.split("Expected one of:")
+        expected_text = expected_list[1].strip()
+        expected_items = [item.strip()[2:] for item in expected_text.split("\n") if item.strip()]
+        error_msg = "Instead of " + next_token + ", expected one of the following token after "+str(last_token.type)[11:]+": "+str(expected_items)
+        error = Error(current_line, error_msg, 'Parser')
+        has_error = False
     # print(parse_tree.pretty())
-    transformer = OurTransformer()
-    ast = transformer.transform(parse_tree)
-    graph = tree_to_graphviz(ast)
-    graph.render('ASTs/{}'.format(file_path[10:-11]),format='png', view=True)
-    if (len(sys.argv)>=3):
-        tree.pydot__tree_to_png( parse_tree, sys.argv[2])
+    if not has_error:
+        transformer = OurTransformer()
+        ast = transformer.transform(parse_tree)
+        analyze_program(ast)
+        # graph = tree_to_graphviz(ast)
+        # graph.render('ASTs/{}'.format(file_path[10:-11]),format='png', view=True)
+        # if (len(sys.argv)>=3):
+        #     tree.pydot__tree_to_png( parse_tree, sys.argv[2])
