@@ -14,7 +14,7 @@ _ERROR = -1
 scope_tree = Scope_tree()
 
 def analyze_expression(node, variable_type):
-    return False
+    return True
 
 def list_handler(node, dim):
     if node.num_child==1:
@@ -46,13 +46,13 @@ def get_type(node, line):
         dim, element_type = list_handler(node.children2, 1)
         if dim==-1:
             error = Error(line, element_type, 'Semantic Analyzer')
-        result = list_tup_type(dim, element_type)
+        result = list_type(dim, element_type)
         return result
     elif node.children0=='tup':
         dim, element_type = tup_handler(node.children2, 1)
         if dim==-1:
             error = Error(line, element_type, 'Semantic Analyzer')
-        result = list_tup_type(dim, element_type)
+        result = tup_type(dim, element_type)
         return result
     elif node.children0=='dict':
         k, val_type = dict_handler(node, line)
@@ -71,14 +71,21 @@ def analyze_declare(line_node):
     value_expression = line_node.children3
     match = analyze_expression(value_expression, variable_type)
     if match:
-        scope_tree.add_variable(identifier, variable_type)
+        scope_tree.add_variable(identifier, variable_type, identifier.line)
+        return True
     else:
         error_msg = "Type of expression assigned does not match with the declared data type for variable '{}'.".format(identifier)
         error = Error(identifier.line, error_msg, 'Semantic Analyzer')
+        return False
+    
+def analyze_assignment():
+    return True
 
 def analyze_line(line_node):
     if isinstance(line_node, declaration):
         res = analyze_declare(line_node)
+    if isinstance(line_node, assignment):
+        res = analyze_assignment()
 
 def analyze_program(node):
     for i in range(node.num_child):

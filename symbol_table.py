@@ -30,15 +30,21 @@ class Scope_tree:
         else:
             return -1
         
-    def add_variable(self, var_name, var_type):
+    def add_variable(self, var_name, var_type, line):
         res = self.type_variable(var_name)
         if var_name in list(self.current_scope.table.keys()):
-            # Error of redefination
+            error_msg = "The variable is already defined in the current scope and redefination is not allowed"
+            error = Error(line, error_msg, 'Semantic Analyzer')
             return
         self.current_scope.table[var_name] = var_type
         return
 
-class list_tup_type:
+class list_type:
+    def __init__(self, dim, element_type):
+        self.dim = dim
+        self.element_type = element_type
+
+class tup_type:
     def __init__(self, dim, element_type):
         self.dim = dim
         self.element_type = element_type
