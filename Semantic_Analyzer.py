@@ -36,23 +36,30 @@ def tup_handler(node, dim):
             error_msg = "Tuples can ontly have Tuples in it."
             return -1, error_msg
         
-def dict_handler(node):
-    val_type = get_type(node.children3)
+def dict_handler(node, line):
+    val_type = get_type(node.children3, line)
     key_type = node.children2.children0
     return key_type, val_type
 
-def get_type(node):
+def get_type(node, line):
     if node.children0=='list':
         dim, element_type = list_handler(node.children2, 1)
+        if dim==-1:
+            error = Error(line, element_type, 'Semantic Analyzer')
         result = list_tup_type(dim, element_type)
         return result
     elif node.children0=='tup':
         dim, element_type = tup_handler(node.children2, 1)
+        if dim==-1:
+            error = Error(line, element_type, 'Semantic Analyzer')
         result = list_tup_type(dim, element_type)
         return result
     elif node.children0=='dict':
-        key_type, val_type = dict_handler(node)
-        result = dict_type(key_type, val_type)
+        k, val_type = dict_handler(node, line)
+        if k!='num' or k!='str' or k!='bool':
+            error_msg = "The dictionay can only have num, bool, or str as the data type."
+            error = Error(line, error_msg, 'Semantic Analyzer')
+        result = dict_type(k, val_type)
         return result
     else:
         return node.children0
@@ -60,15 +67,7 @@ def get_type(node):
 def analyze_declare(line_node):
     data_type_node = line_node.children0
     identifier = line_node.children1
-    variable_type = get_type(data_type_node)
-    if isinstance(variable_type, list_tup_type):
-        if variable_type.dim == -1:
-            error = Error(identifier.line, variable_type.element_type, 'Semantic Analyzer')
-    if isinstance(variable_type, dict_type):
-        k = variable_type.key_type
-        if k!='num' or k!='str' or k!='bool':
-            error_msg = "The dictionay can only have num, bool, or str as the data type."
-            error = Error(identifier.line, error_msg, 'Semantic Analyzer')
+    variable_type = get_type(data_type_node, identifier.line)
     value_expression = line_node.children3
     match = analyze_expression(value_expression, variable_type)
     if match:
