@@ -115,7 +115,6 @@ def analyze_assignment(line_node):
         if (equal_type=='-=' or equal_type=='/=' or equal_type=='*=') and variable_type!='num':
             error = Error(line, "The {} can only be used for num data_type".format(equal_type))
         return True
-=======
 
 def analyze_while(line_node):
     cond = line_node.children1
@@ -154,6 +153,10 @@ def analyze_line(line_node):
         res = analyze_declare(line_node)
     if isinstance(line_node, assignment):
         res = analyze_assignment()
+    if isinstance(line_node, while_loop):
+        res = analyze_while()
+    if isinstance(line_node, for_loop):
+        res = analyze_for()
 
 def analyze_program(node):
     for i in range(node.num_child):
