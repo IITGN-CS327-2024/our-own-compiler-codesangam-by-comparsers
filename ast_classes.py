@@ -156,21 +156,21 @@ class comparators(ASTNode):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class access_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class num_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class els(ASTNode):
     def __init__(self, children):
@@ -178,35 +178,35 @@ class els(ASTNode):
         children = [children[1]]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class ob(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class ol(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class ou(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class obi(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class function_call(ASTNode):
     def __init__(self, children):
@@ -214,7 +214,7 @@ class function_call(ASTNode):
         children = children[::2]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class print_(ASTNode):
     def __init__(self, children):
@@ -222,21 +222,21 @@ class print_(ASTNode):
         children = children[::2]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class print_body(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class print_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class input_(ASTNode):
     def __init__(self, children):
@@ -244,14 +244,14 @@ class input_(ASTNode):
         children = [children[2], children[-2]]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class let(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class ifelse(ASTNode):
     def __init__(self, children):
@@ -261,7 +261,7 @@ class ifelse(ASTNode):
         children = children[:-4] + children[-2:]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class magar_temp(ASTNode):
     def __init__(self, children):
@@ -271,7 +271,7 @@ class magar_temp(ASTNode):
         children = children[:-3] + children[-1:]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class nahitoh_temp(ASTNode):
     def __init__(self, children):
@@ -281,28 +281,28 @@ class nahitoh_temp(ASTNode):
         children = children[:-1]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class update_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class update(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class condition(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class arguments(ASTNode):
     def __init__(self, children):
@@ -310,21 +310,21 @@ class arguments(ASTNode):
         children = children[:1]+children[2:]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class args(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class return_func(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class function(ASTNode):
     def __init__(self, children):
@@ -334,7 +334,7 @@ class function(ASTNode):
         children = children[:-1]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class function_call_arguments(ASTNode):
     def __init__(self, children):
@@ -342,7 +342,7 @@ class function_call_arguments(ASTNode):
         children = children[::2]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class ed(ASTNode):
     def __init__(self, children):
@@ -350,14 +350,14 @@ class ed(ASTNode):
         children = [children[1]]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class dict_body(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class dict_element(ASTNode):
     def __init__(self, children):
@@ -365,35 +365,35 @@ class dict_element(ASTNode):
         children = [children[0], children[2]]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class key(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class child(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class list_body(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class list_element(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class et(ASTNode):
     def __init__(self, children):
@@ -401,35 +401,35 @@ class et(ASTNode):
         children = [children[1]]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class access_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class a_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class num_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class n_temp(ASTNode):
     def __init__(self, children):
         self.num_child = 0
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class closure(ASTNode):
     def __init__(self, children):
@@ -439,7 +439,7 @@ class closure(ASTNode):
         children = children[:-1]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class tryelse(ASTNode):
     def __init__(self, children):
@@ -449,7 +449,7 @@ class tryelse(ASTNode):
         children = children[:-4] + children[-2:]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class varna(ASTNode):
     def __init__(self, children):
@@ -459,7 +459,7 @@ class varna(ASTNode):
         children = children[:-1]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class for_loop(ASTNode):
     def __init__(self, children):
@@ -469,7 +469,7 @@ class for_loop(ASTNode):
         children = children[:-2] + children[-1:]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
 
 class while_loop(ASTNode):
     def __init__(self, children):
@@ -479,4 +479,4 @@ class while_loop(ASTNode):
         children = children[:-2] + children[-1:]
         for i, child in enumerate(children):
             self.num_child+=1
-            setattr(self, f'child{i}', child)
+            setattr(self, f'children{i}', child)
