@@ -179,6 +179,16 @@ def analyze_if(line_node):
         error_msg = "Type of expression given as if condition is not of boolean type '{}'.".format(cond)
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
 
+def analyze_try(line_node):
+    scope_tree.create_scope()
+    for i in range(1,line_node.num_child):
+        line = getattr(line_node, "children{}".format(i))
+        if isinstance(line,varna):
+            scope_tree.close_scope()
+            scope_tree.create_scope()
+        else:
+            res = analyze_line(line)
+    scope_tree.close_scope()
 
 def analyze_assignment():
     return True
@@ -186,14 +196,16 @@ def analyze_assignment():
 def analyze_line(line_node):
     if isinstance(line_node, declaration):
         res = analyze_declare(line_node)
-    if isinstance(line_node, assignment):
+    elif isinstance(line_node, assignment):
         res = analyze_assignment(line_node)
-    if isinstance(line_node, while_loop):
+    elif isinstance(line_node, while_loop):
         res = analyze_while(line_node)
-    if isinstance(line_node, for_loop):
+    elif isinstance(line_node, for_loop):
         res = analyze_for(line_node)
-    if isinstance(line_node, ifelse):
+    elif isinstance(line_node, ifelse):
         res = analyze_if(line_node)
+    elif isinstance(line_node, tryelse):
+        res = analyze_try(line_node)
 
 def analyze_program(node):
     for i in range(node.num_child):
