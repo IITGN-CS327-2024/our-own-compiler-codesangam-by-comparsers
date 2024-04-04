@@ -40,13 +40,11 @@ class Scope_tree:
         return
 
 class list_type:
-    def __init__(self, dim, element_type):
-        self.dim = dim
+    def __init__(self, element_type):
         self.element_type = element_type
 
 class tup_type:
-    def __init__(self, dim, element_type):
-        self.dim = dim
+    def __init__(self, element_type):
         self.element_type = element_type
 
 class dict_type:

@@ -78,7 +78,7 @@ all_e: e | ed | els | et
 
 data_types: NUM | STR | BOOL | DICT SPECIFIER_START data_types COMMA data_types SPECIFIER_END | LIST SPECIFIER_START data_types SPECIFIER_END | TUP SPECIFIER_START data_types SPECIFIER_END  
 
-assignment: IDENTIFIER all_equal all_e| IDENTIFIER all_equal input | data_types IDENTIFIER EQUAL all_e | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE all_equal all_e
+assignment: IDENTIFIER all_equal all_e| IDENTIFIER all_equal input | data_types IDENTIFIER EQUAL all_e | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE all_equal all_e | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE all_equal input
 temp: NUMBER | STRING 
 access_temp: temp a_temp
 a_temp: COMMA temp a_temp | 
