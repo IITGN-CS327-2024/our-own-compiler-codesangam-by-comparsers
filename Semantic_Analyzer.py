@@ -90,6 +90,22 @@ def analyze_while(line_node):
         error_msg = "Type of expression given as while condition is not of boolean type '{}'.".format(cond)
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
 
+def analyze_for(line_node):
+    declare = line_node.children1
+    analyze_declare(declare)
+    cond = line_node.children2
+    match = analyze_expression(cond,bool)
+    if match:
+        scope_tree.create_scope()
+        for i in range(4,line_node.num_child):
+            line = getattr(line_node, "children{}".format(i))
+            res = analyze_line(line)
+        scope_tree.close_scope()
+    else:
+        error_msg = "Type of expression given as for condition is not of boolean type '{}'.".format(cond)
+        error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
+
+
 def analyze_assignment():
     return True
 
