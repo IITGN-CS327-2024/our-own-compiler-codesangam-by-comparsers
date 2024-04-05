@@ -479,6 +479,7 @@ def analyze_try(line_node):
         else:
             res = analyze_line(line)
     scope_tree.close_scope()
+    
 def analyze_print(line_node):
     node = line_node.children1
     for i in range(node.num_child):
@@ -488,23 +489,23 @@ def analyze_print(line_node):
 def analyze_line(line_node):
     if isinstance(line_node, declaration):
         res = analyze_declare(line_node)
-    elelif isinstance(line_node, assignment):
+    elif isinstance(line_node, assignment):
         res = analyze_assignment(line_node)
-    elelif isinstance(line_node, while_loop):
+    elif isinstance(line_node, while_loop):
         res = analyze_while(line_node)
     elif isinstance(line_node, function):
         res = analyze_function(line_node)
     elif isinstance(line_node, function_call):
         res = analyze_function_call(line_node)
-    elelif isinstance(line_node, for_loop):
+    elif isinstance(line_node, for_loop):
         res = analyze_for(line_node)
-    elelif isinstance(line_node, ifelse):
+    elif isinstance(line_node, ifelse):
         res = analyze_if(line_node)
     elif isinstance(line_node, print_):
         res = analyze_print(line_node)
-        elif isinstance(line_node, tryelse):
+    elif isinstance(line_node, tryelse):
         res = analyze_try(line_node)
-
+    
 
 def analyze_program(node):
     for i in range(node.num_child):
