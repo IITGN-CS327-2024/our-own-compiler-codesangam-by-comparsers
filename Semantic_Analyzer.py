@@ -418,6 +418,33 @@ def analyze_function(line_node):
         res = analyze_line(in_line) 
     scope_tree.close_scope()
 
+def analyze_closure(line_node):
+    identifier = line_node.children1
+    line = identifier.line
+    return_type1 = get_type(line_node.children0, line)
+    return_type2 = get_type(line_node.children4, line)
+    if (return_type1 == return_type2):
+        arg_node = line_node.children5
+        args = []
+        input_names = []
+        for i in range(0, arg_node.num_child, 2):
+            temp_type = get_type(getattr(arg_node, "children{}".format(i)), line)
+            args.append(temp_type)
+            var_name = getattr(arg_node, "children{}".format(i+1))
+            input_names.append(var_name)
+        function_type = func_type(args, return_type1)
+        scope_tree.create_scope()
+        for i in range(len(args)):
+            scope_tree.add_variable(input_names[i], args[i], line)
+        for i in range(6, line_node.num_child):
+            in_line = getattr(line_node, "children{}".format(i))
+            res = analyze_line(in_line) 
+        scope_tree.close_scope()
+    else:
+        error_msg = "Type Mismatch in Closure statement '{}'.".format(return_type1,return_type2)
+        error = Error(line, error_msg, 'Semantic Analyzer')
+
+
 def analyze_function_call(line_node):
     func_name = line_node.children0
     line = func_name.line
@@ -479,7 +506,7 @@ def analyze_try(line_node):
         else:
             res = analyze_line(line)
     scope_tree.close_scope()
-    
+
 def analyze_print(line_node):
     node = line_node.children1
     for i in range(node.num_child):
@@ -505,6 +532,8 @@ def analyze_line(line_node):
         res = analyze_print(line_node)
     elif isinstance(line_node, tryelse):
         res = analyze_try(line_node)
+    elif isinstance(line_node, closure):
+        res = analyze_closure(line_node)
     
 
 def analyze_program(node):
