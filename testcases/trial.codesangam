@@ -1,5 +1,8 @@
-karya num complierProject(bool: works):
-	num grade = 0
-    works = Galat
+print("Hello")
+list<num> b = [3, Sahi, 5]
+list<num> a = b.copy()
 
-complierProject()
+agar(Sahi):
+    print("Hello")
+nahitoh: 
+    print()

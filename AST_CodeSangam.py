@@ -211,7 +211,7 @@ class OurTransformer(lark.Transformer):
         if len(children)==0:
             return None
         else:
-            children = [children[1]]
+            children = [children[1:]]
             return children
 
     def dict_element(self, children):
@@ -235,7 +235,7 @@ class OurTransformer(lark.Transformer):
         if len(children)==0:
             return None
         else:
-            children = [children[1]]
+            children = [children[1:]]
             return children
 
     def list_element(self, children):
@@ -259,7 +259,7 @@ class OurTransformer(lark.Transformer):
         if len(children)==0:
             return None
         else:
-            children = [children[1]]
+            children = [children[1:]]
             return children
 
     def num_temp(self, children):
@@ -271,7 +271,7 @@ class OurTransformer(lark.Transformer):
         if len(children)==0:
             return None
         else:
-            children = [children[1]]
+            children = [children[1:]]
             return children
 
     def all_equal(self, children):
@@ -316,7 +316,7 @@ class OurTransformer(lark.Transformer):
         if len(children)==0:
             return None
         else:
-            children = [children[1]]
+            children = [children[1:]]
             return children
     
     def update(self, children):
