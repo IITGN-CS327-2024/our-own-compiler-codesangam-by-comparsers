@@ -1,8 +1,7 @@
-print("Hello")
-list<num> b = [3, Sahi, 5]
-list<num> a = b.copy()
-
-agar(Sahi):
-    print("Hello")
-nahitoh: 
-    print()
+karya num complierProject(bool: works, bool: hello, num: works):
+	num grade = 0
+	agar (Sahi):
+		grade = 11
+	nahitoh:
+		grade = 9
+	vapas grade
