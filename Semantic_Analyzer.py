@@ -12,7 +12,6 @@ _UNDEF = -100
 _ERROR = -1
 
 scope_tree = Scope_tree()
-
 E = [e1,e2,e3,e4,e5,e6,e7,e8,e9]
 
 def type_checker(res_type, type):
@@ -56,32 +55,33 @@ def analyze_expr(node, type):
         # print(num)
         if num==1:
             enode = find_in_e(node.children0)
-            # print(node.children0)
             if enode==True:
-                # print("hir")
                 return analyze_expr(node.children0, type)
             elif isinstance(node.children0,expression):
                 return analyze_expr(node.children0,type) 
             else:
-                # print(type_checker(find_all_e_type(node.children0),type))
                 return type_checker(find_all_e_type(node.children0),type)
         elif num==2: 
-            if node.children0.type=="IDENTIFIER":
-                if node.children1.type =="LEN":
-                    return type_checker(type,'num')
-                elif isinstance(node.children1,access_temp):
+            if isinstance(node.children0,ou):
+                return analyze_expr(node.children1,'num')
+            elif isinstance(node.children1,ou):
+                return analyze_expr(node.children0,'num')
+            elif node.children0.type=="IDENTIFIER":
+                if isinstance(node.children1,access_temp):
                     idt_type = scope_tree.type_variable(node.children0)
                     if idt_type==-1:
                         error = Error(node.children0.line, "Variable {} needs to be defined first.".format(node.children0), 'Semantic Analyzer')
                     if isinstance(idt_type,dict_type):
-                        access_type = access_handler(idt_type,node.children1)
+                        access_type = access_handler(idt_type,node.children1,0)
                         return type_checker(access_type,type)
-
+                elif node.children1.type =="LEN":
+                    return type_checker(type,'num')     
                 elif node.children1.type=='VAL':
                     res_type_idt = scope_tree.type_variable(node.children0)
-                    if res_type_idt==-1:
+                    if res_type_idt ==-1:
                         error = Error(node.children0.line, "Variable {} needs to be defined first.".format(node.children0), 'Semantic Analyzer')
                     if isinstance(type, list_type) and isinstance(res_type_idt,dict_type):
+                        # print((type.element_type))
                         return type_checker(type.element_type,res_type_idt.val_type)
 
                 elif node.children1.type=='KEYS':
@@ -109,14 +109,10 @@ def analyze_expr(node, type):
                     return type_checker(idt_type.element_type, type) and type=='num'         
             
             elif node.children0.type=='BANG':
-                return analyze_expr(node.children1,'bool')
+                return analyze_expr(node.children1,'bool') or analyze_expr(node.children1,'num')
 
-            elif isinstance(node.children0,ou):
-                return analyze_expr(node.children1,'bool')
-            elif isinstance(node.children1,ou):
-                return analyze_expr(node.children0,'bool')
             else:
-                if node.children0=='MINUS' and node.children1=='NUMBER':
+                if node.children0.type=='MINUS' and node.children1.type=='NUMBER':
                     return True
             
         elif num==3:
@@ -124,37 +120,40 @@ def analyze_expr(node, type):
                 idt_type = scope_tree.type_variable(node.children0)
                 if idt_type==-1:
                     error = Error(node.children0.line, "Variable {} needs to be defined first.".format(node.children0), 'Semantic Analyzer')
-                if node.children1.type=="COUNT":
-                    return isinstance(idt_type, list_type) or isinstance(idt_type,tup_type)
-                elif node.children1.type=='JOIN':
-                    if node.chidren2.type=='IDENTIFIER':
-                        return type_checker(scope_tree.type_variable(node.children0),scope_tree.type_variable(node.children2))
-                elif node.children1.type=="APPEND":
-                    return isinstance(idt_type,list_type) and analyze_expr(node.children2,idt_type)
-                elif node.children1.type=="ACCESS":
-                    access_type = access_handler2(idt_type,node.children2)
-                    return type_checker(access_type,type)
-                elif node.children1.type=='POP':
-                    access_type = access_handler(idt_type,node.children2)
-                    return type_checker(access_type,type)
-                elif isinstance(node.children1,ol):
-                    return analyze_expr(node.children0,'bool') and analyze_expr(node.children2,'bool')
-                elif isinstance(node.children1,ob):
-                    return analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num')
-                elif isinstance(node.children2,obi):
-                    return (analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num')) or (analyze_expr(node.children0,'bool') and analyze_expr(node.children2,'bool'))
-                elif node.children2.type=='MINUS' or node.children2.type=='EXP':
-                    return analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num')
-                elif node.children2.type=='PLUS':
-                    return (analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num')) or (analyze_expr(node.children0,'str') and analyze_expr(node.children2,'str'))
-
-        elif num==4:
-            if node.chidren0.type=='IDENTIFIER':
-                idt_type = scope_tree.type_variable(node.children0)
+                # print(idt_type.element_type)
                 if idt_type==-1:
-                    error = Error(node.children0.line, "Variable {} needs to be defined first.".format(node.children0), 'Semantic Analyzer')
-                els_type = els_handler(idt_type,node.children2.children0.num_child)
-                return type_checker(find_all_e_type(node.children3),els_type)      
+                        error = Error(node.children0.line, "Variable {} needs to be defined first.".format(node.children0), 'Semantic Analyzer')
+                if node.children1.type=="COUNT":
+                    if isinstance(idt_type, list_type) or isinstance(idt_type,tup_type):
+                        return type_checker(find_all_e_type(node.children2.children0),idt_type.element_type)
+                elif node.children1.type=="APPEND":
+                    return isinstance(idt_type,list_type) and analyze_expr(node.children2,idt_type.element_type)
+                elif node.children1.type=="ACCESS":
+                    access_type = access_handler2(idt_type,node.children2,0)
+                    return type_checker(access_type,type)
+                elif node.children1.type=='JOIN':
+                    if node.children2.type=='IDENTIFIER':
+                        return type_checker(scope_tree.type_variable(node.children0),scope_tree.type_variable(node.children2))
+                elif node.children1.type=='POP':
+                    return type_checker(idt_type,type) and pop_handler(idt_type,node.children2)
+            elif isinstance(node.children1,ol):
+                return analyze_expr(node.children0,'bool') and analyze_expr(node.children2,'bool') and type_checker(type,'bool')
+            elif isinstance(node.children1,ob):
+                return analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num') and type_checker(type,'num')
+            elif isinstance(node.children2,obi):
+                return (analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num')) or (analyze_expr(node.children0,'bool') and analyze_expr(node.children2,'bool')) and (type_checker(type,'num') or type_checker(type,'bool'))
+            elif node.children1.type=='MINUS' or node.children1.type=='EXP':
+                return analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num') and type_checker('num',type)
+            elif node.chilren1.type=='PLUS':
+                return (analyze_expr(node.children0,'num') and analyze_expr(node.children2,'num')) or (analyze_expr(node.children0,'str') and analyze_expr(node.children2,'str')) and (type_checker(type,'num') or type_checker(type,'str'))
+            
+        elif num==4:
+            if node.children0.type=='IDENTIFIER':
+                # print(node) 
+                idt_type = scope_tree.type_variable(node.children0)
+                els_type = els_handler(idt_type, node.children2.children0, node.children3)
+                # print(els_type
+                return type_checker(idt_type,type) and els_type 
 
         elif num==5:
             idt_type = scope_tree.type_variable(node.children0)
@@ -167,14 +166,57 @@ def analyze_expr(node, type):
             t = scope_tree.type_variable(node)
             if t==-1:
                 error = Error(node.line, "Variable {} needs to be defined first.".format(t), 'Semantic Analyzer')
-            return type_checker(t,type)
+            return type_checker(scope_tree.type_variable(node),type)
         elif (node.type=='NUMBER'):
-            return type=="num"
+            return type=='num'
         elif (node.type=='STRING'):
             return type=='str'
         elif (node.type=='SAHI' or node.type=='GALAT'):
             return type=='bool'
-    # return True
+    return False
+
+def check(type, node):
+    if node.type=='NUMBER' and type=='num':
+        return True
+    elif node.type=='STR' and  type=='str':
+        return True
+    return False
+   
+def pop_handler(idt_type, node):
+    num = node.num_child
+    for n in range(num):
+        temp = getattr(node, "children{}".format(n))
+        # print(temp,"la")
+        if isinstance(idt_type, dict_type):
+            # print("la")
+            if not check(idt_type.key_type, temp):
+                return False
+            idt_type = idt_type.val_type
+        if isinstance(idt_type,list_type) or isinstance(idt_type,tup_type):
+            # print(temp,"la")
+            if not (temp.type=='NUMBER' and (isinstance(idt_type,list_type) or isinstance(idt_type,tup_type))):
+                return False
+            idt_type=idt_type.element_type
+    return True
+
+
+def access_handler(var_type, node,line):
+    current_type = var_type
+    for i in range(node.num_child):
+        temp = getattr(node, "children{}".format(i))     
+        if isinstance(current_type, dict_type):
+            if temp.type=="STRING":
+                if not current_type.key_type=='str':
+                    error = Error(line, "Arguments not correct",'Semantic Analyzer') 
+            elif temp.type=="NUMBER": 
+                if not current_type.key_type=='num':
+                    error = Error(line, "Arguments not correct",'Semantic Analyzer')
+        if isinstance(current_type, dict_type):
+            current_type = current_type.val_type
+        else:
+            current_type = current_type.element_type
+    # print(current_type)
+    return current_type
 
 def access_handler2(idt_type, node, line):
     cur_type = idt_type
@@ -183,16 +225,37 @@ def access_handler2(idt_type, node, line):
         if temp.type=='NUMBER' and isinstance(cur_type,list_type):
             cur_type = cur_type.element_type
     return cur_type
+ 
+def els_handler(idt_type, node, all_e_node):
+    num = node.num_child
+    for n in range(num):
+        temp = getattr(node, "children{}".format(n))
+        # print(temp,"la")
+        if isinstance(idt_type, dict_type):
+            # print("la")
+            if not check(idt_type.key_type, temp):
+                return False
+            idt_type = idt_type.val_type
+        if isinstance(idt_type,list_type) or isinstance(idt_type,tup_type):
+            # print(temp,"la")
+            if not (temp.type=='NUMBER' and (isinstance(idt_type,list_type) or isinstance(idt_type,tup_type))):
+                return False
+            idt_type=idt_type.element_type
+    if type_checker(find_all_e_type(all_e_node.children0),idt_type):
+        return True
+    return False
 
-def els_handler(idt_type,num):
-    for i in range(num-1):
-        if isinstance(idt_type.element_type,list_type)==0:
-            return False
-        idt_type = idt_type.element_type
-    return idt_type
+
+def find_return_type(node):
+    func_types = scope_tree.type_variable(node.children0)
+    if func_types==-1:
+        return 'no'
+    return func_types.outputs
+
 
 def find_all_e_type(node):
     type_list = []
+    # print(node)
     if isinstance(node,ASTNode):
         num = node.num_child
     else: 
@@ -200,13 +263,13 @@ def find_all_e_type(node):
             return 'num'
         elif node.type=='STRING':
             return 'str'
-        elif node.type=='IDENTIFIER':
+        elif (node.type=='SAHI' or node.type=='GALAT'):
+            return 'bool'
+        else: 
             type_var = scope_tree.type_variable(node)
             if type_var==-1:
                 error = Error(node.line, "Variable {} needs to be defined first.".format(node), 'Semantic Analyzer')
-            return type_var
-        else:
-            return 'bool'
+            return scope_tree.type_variable(node)
     # print(num)
     while (num>0):
         if isinstance(node,els):
@@ -217,14 +280,22 @@ def find_all_e_type(node):
             type_list.append('els')
         elif isinstance(node,ed):
             node = node.children0.children0
+            k = None
+            if node.children0.type=='NUMBER':          
+                k = 'num'
+            else:
+                k = 'str'
             if isinstance(node,ASTNode):
                 num = node.num_child
-            type_list.append('ed')
+                node = node.children1
+            type_list.append(['ed',k])
         elif isinstance(node,et):
             node = node.children0.children0
             if isinstance(node,ASTNode):
                 num = node.num_child
             type_list.append('et')
+        elif isinstance(node,function_call):
+            return find_return_type(node)
         elif node.type=='NUMBER':
             num = 0
             type_list.append('num')
@@ -234,31 +305,31 @@ def find_all_e_type(node):
         else:
             type_list.append('bool')
             num = 0
-    # print(type_list)
     el =type_list[-1]
     new_el = None
     for e in type_list[-2::-1]:
+        # print(e)
+        if isinstance(e,list):
+            new_el = dict_type(e[1],el)
         if e == 'els':
             new_el = list_type(el)
         elif e=='et':
             new_el = tup_type(el)
-        else:
-            new_el = dict_type(el)
         el = new_el
-    # print(el)
+    
     return el
 
 def list_handler(node, line):
     if node.num_child==1:
         return node.children0
     else:
-        return get_type(node.children2, line)
+        return get_type(node, line)
         
 def tup_handler(node, line):
     if node.num_child==1:
         return node.children0
     else:
-        return get_type(node.children2, line)
+        return get_type(node, line)
         
 def dict_handler(node, line):
     val_type = get_type(node.children3, line)
@@ -268,6 +339,7 @@ def dict_handler(node, line):
 def get_type(node, line):
     if node.children0=='list':
         element_type = list_handler(node.children2, line)
+        # print(element_type,'hi')
         result = list_type(element_type)
         return result
     elif node.children0=='tup':
@@ -276,7 +348,7 @@ def get_type(node, line):
         return result
     elif node.children0=='dict':
         k, val_type = dict_handler(node, line)
-        if k!='num' or k!='str' or k!='bool':
+        if k!='num' and k!='str' and k!='bool':
             error_msg = "The dictionay can only have num, bool, or str as the data type."
             error = Error(line, error_msg, 'Semantic Analyzer')
         result = dict_type(k, val_type)
@@ -288,32 +360,17 @@ def analyze_declare(line_node):
     data_type_node = line_node.children0
     identifier = line_node.children1
     variable_type = get_type(data_type_node, identifier.line)
-    value_expression = line_node.children3
-    match = analyze_expr(value_expression, variable_type)
+    # print(variable_type,line_node.children0.children0
+    value_expr = line_node.children3
+    match = analyze_expr(value_expr, variable_type)
     if match:
         scope_tree.add_variable(identifier, variable_type, identifier.line)
         return True
     else:
-        error_msg = "Type of expression assigned does not match with the declared data type for variable '{}'.".format(identifier)
+        error_msg = "Type of expr assigned does not match with the declared data type for variable '{}'.".format(identifier)
         error = Error(identifier.line, error_msg, 'Semantic Analyzer')
         return False
     
-def access_handler(var_type, node, line):
-    current_type = var_type
-    for i in range(node.num_child):
-        temp = getattr(node, "children{}".format(i))
-        if temp.type=="STRING":
-            if not isinstance(current_type, dict_type):
-                error = Error(line, "Invalid Access", 'Semantic Analyzer') 
-        if temp.type=="NUMBER":
-            if not (isinstance(current_type, dict_type) or isinstance(current_type, list_type)):
-                error = Error(line, "Invalid Access", 'Semantic Analyzer')
-        if isinstance(current_type, dict_type):
-            current_type = current_type.val_type
-        else:
-            current_type = current_type.element_type
-    return current_type
-
 def analyze_assignment(line_node):
     identifier = line_node.children0
     variable_type = scope_tree.type_variable(identifier)
@@ -370,7 +427,7 @@ def analyze_assignment(line_node):
 
 def analyze_while(line_node):
     cond = line_node.children1
-    match = analyze_expr(cond,'bool')
+    match = analyze_expr(cond,bool)
     if match:
         scope_tree.create_scope()
         for i in range(2,line_node.num_child):
@@ -378,14 +435,14 @@ def analyze_while(line_node):
             res = analyze_line(line)
         scope_tree.close_scope()
     else:
-        error_msg = "Type of expression given as while condition is not of boolean type '{}'.".format(cond)
+        error_msg = "Type of expr given as while condition is not of boolean type '{}'.".format(cond)
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
 
 def analyze_for(line_node):
     declare = line_node.children1
     analyze_declare(declare)
     cond = line_node.children2
-    match = analyze_expr(cond,'bool')
+    match = analyze_expr(cond,bool)
     if match:
         scope_tree.create_scope()
         for i in range(4,line_node.num_child):
@@ -393,8 +450,9 @@ def analyze_for(line_node):
             res = analyze_line(line)
         scope_tree.close_scope()
     else:
-        error_msg = "Type of expression given as for condition is not of boolean type '{}'.".format(cond)
+        error_msg = "Type of expr given as for condition is not of boolean type '{}'.".format(cond)
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
+
 
 def analyze_function(line_node):
     func_name = line_node.children2
@@ -417,6 +475,7 @@ def analyze_function(line_node):
         in_line = getattr(line_node, "children{}".format(i))
         res = analyze_line(in_line) 
     scope_tree.close_scope()
+
 
 def analyze_closure(line_node):
     identifier = line_node.children1
@@ -461,9 +520,10 @@ def analyze_function_call(line_node):
         if not match:
             error = Error(line, "The argument at position {} doesnt matches with the defination of the function".format(i), 'Semantic Analyzer')
 
+
 def analyze_if(line_node):
     cond = line_node.children1
-    match = analyze_expr(cond,'bool')
+    match = analyze_expr(cond,bool)
     if match:
         scope_tree.create_scope()
         for i in range(2,line_node.num_child):
@@ -475,14 +535,14 @@ def analyze_if(line_node):
                     continue
                 else:
                     cond = line.children1
-                    match2 = analyze_expr(cond,'bool')
+                    match2 = analyze_expr(cond,bool)
                     if match2:
                         for i in range(2,line.num_child):
                             line2 = getattr(line, "children{}".format(i))
                             analyze_line(line2)
                         scope_tree.close_scope()
                     else:
-                        error_msg = "Type of expression given as elseif condition is not of boolean type '{}'.".format(cond)
+                        error_msg = "Type of expr given as elseif condition is not of boolean type '{}'.".format(cond)
                         error = Error(line.children0.line, error_msg, 'Semantic Analyzer')
             elif isinstance(line, nahitoh_temp):
                 scope_tree.create_scope()
@@ -493,7 +553,7 @@ def analyze_if(line_node):
             else:
                 res = analyze_line(line)
     else:
-        error_msg = "Type of expression given as if condition is not of boolean type '{}'.".format(cond)
+        error_msg = "Type of expr given as if condition is not of boolean type '{}'.".format(cond)
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
 
 def analyze_try(line_node):
@@ -512,6 +572,7 @@ def analyze_print(line_node):
     for i in range(node.num_child):
         temp = getattr(node, "children{}".format(i))
         match = analyze_expr(temp, 'num')
+
 
 def analyze_line(line_node):
     if isinstance(line_node, declaration):
