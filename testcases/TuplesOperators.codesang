@@ -5,14 +5,14 @@ tup<num> t2 = {12, 0, 79}
 
 karya num main():
     $$ Tuple operations
-    num c = t1.count(1)
-    num element = t1.access(1)
+    num c = t2.count(1)
+    $$num element = t2.access(1)
     num length = t1.len()
 
     $$ Number operations
     num x = 7
     num y = 14
-    num res_add = y + 5
+    $$num res_add = y + 5
     num res_multi = y * 2
     num res_sub = y - 3
     num res_div = y / 2

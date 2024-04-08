@@ -1,7 +1,9 @@
-karya num complierProject(bool: works, bool: hello, num: works):
+karya void complierProject(bool: works, bool: hello, num: jk):
 	num grade = 0
 	agar (Sahi):
 		grade = 11
 	nahitoh:
 		grade = 9
 	vapas grade
+
+complierProject(Sahi, Sahi, 7)

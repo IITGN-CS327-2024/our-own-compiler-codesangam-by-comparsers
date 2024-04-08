@@ -1,18 +1,20 @@
 from error_handling import *
 
 class Scope_tree_node:
-    def __init__(self, parent):
+    def __init__(self, parent, type):
         self.table = {}
         self.parent_node = parent
+        self.has_return = False
         self.children = []
+        self.scope_type = type
 
 class Scope_tree:
     def __init__(self):
-        self.root = Scope_tree_node(None)
+        self.root = Scope_tree_node(None, 'global')
         self.current_scope = self.root
 
-    def create_scope(self):
-        new_scope = Scope_tree_node(self.current_scope)
+    def create_scope(self, type):
+        new_scope = Scope_tree_node(self.current_scope, type)
         self.current_scope.children.append(new_scope)
         self.current_scope = new_scope
 
@@ -56,3 +58,28 @@ class func_type:
     def __init__(self, inputs, outputs):
         self.inputs = inputs
         self.outputs = outputs
+
+class Stack:
+    def __init__(self):
+        self.stack = []
+
+    def push(self, item):
+        self.stack.append(item)
+
+    def pop(self):
+        if not self.is_empty():
+            return self.stack.pop()
+        else:
+            return None  # Or raise an exception if you prefer
+
+    def peek(self):
+        if not self.is_empty():
+            return self.stack[-1]
+        else:
+            return None  # Or raise an exception if you prefer
+
+    def is_empty(self):
+        return len(self.stack) == 0
+
+    def size(self):
+        return len(self.stack)

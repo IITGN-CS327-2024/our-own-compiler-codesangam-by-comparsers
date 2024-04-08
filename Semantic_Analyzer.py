@@ -12,6 +12,7 @@ _UNDEF = -100
 _ERROR = -1
 
 scope_tree = Scope_tree()
+functions = Stack()
 E = [e1,e2,e3,e4,e5,e6,e7,e8,e9]
 
 def type_checker(res_type, type):
@@ -54,6 +55,9 @@ def analyze_expr(node, type):
         num = node.num_child
         # print(num)
         if num==1:
+            if isinstance(node,function_call):
+                temp = analyze_function_call(node)
+                return (type_checker(temp, type))
             enode = find_in_e(node.children0)
             if enode==True:
                 return analyze_expr(node.children0, type)
@@ -171,7 +175,7 @@ def analyze_expr(node, type):
             return type=='num'
         elif (node.type=='STRING'):
             return type=='str'
-        elif (node.type=='SAHI' or node.type=='GALAT'):
+        elif (node.type=='Sahi' or node.type=='Galat'):
             return type=='bool'
     return False
 
@@ -374,8 +378,9 @@ def analyze_declare(line_node):
 def analyze_assignment(line_node):
     identifier = line_node.children0
     variable_type = scope_tree.type_variable(identifier)
-    if variable_type==-1:
-        error = Error(identifier.line, "Variable {} needs to be defined first.".format(identifier), 'Semantic Analyzer')
+    if isinstance(variable_type, tup_type):
+        error_msg = "Tuples can not be updated or re-assigned."
+        error = Error(identifier.line, error_msg, 'Semantic Analyzer')
     line = identifier.line
     if variable_type == -1:
         error_msg = "The variable '{}' needs to be defined first.".format(identifier)
@@ -427,9 +432,9 @@ def analyze_assignment(line_node):
 
 def analyze_while(line_node):
     cond = line_node.children1
-    match = analyze_expr(cond,bool)
+    match = analyze_expr(cond,'bool')
     if match:
-        scope_tree.create_scope()
+        scope_tree.create_scope('while')
         for i in range(2,line_node.num_child):
             line = getattr(line_node, "children{}".format(i))
             res = analyze_line(line)
@@ -442,9 +447,9 @@ def analyze_for(line_node):
     declare = line_node.children1
     analyze_declare(declare)
     cond = line_node.children2
-    match = analyze_expr(cond,bool)
+    match = analyze_expr(cond,'bool')
     if match:
-        scope_tree.create_scope()
+        scope_tree.create_scope('for')
         for i in range(4,line_node.num_child):
             line = getattr(line_node, "children{}".format(i))
             res = analyze_line(line)
@@ -468,14 +473,45 @@ def analyze_function(line_node):
         input_names.append(var_name)
     function_type = func_type(args, return_type)
     scope_tree.add_variable(func_name, function_type, line)
-    scope_tree.create_scope()
+    scope_tree.create_scope('function')
+    functions.push(function_type)
     for i in range(len(args)):
         scope_tree.add_variable(input_names[i], args[i], line)
     for i in range(4, line_node.num_child):
         in_line = getattr(line_node, "children{}".format(i))
         res = analyze_line(in_line) 
+    if function_type.outputs != 'void':
+        temp = check_return(scope_tree.current_scope)
+        if not temp:
+            error = Error(line, "Function misses a return statement.", 'Semantic Analyzer')
     scope_tree.close_scope()
+    functions.pop()
 
+def check_return(node):
+    if node.has_return:
+        return True
+    else:
+        if len(node.children)==0:
+            return False
+        else:
+            flag = False
+            for child in node.children:
+                flag = check_return(child)
+                if flag:
+                    return True
+            if not flag:
+                return False
+
+def analyze_return (line_node):
+    line = line_node.children0.line
+    expression_node = line_node.children1
+    func = functions.peek()
+    if func==None:
+        error = Error(line, "The return statement should be inside a function.", 'Semantic Analyzer')
+    if not get_type(expression_node, func):
+        error = Error(line, "The return type of the expression doesnt match with the one declared.", 'Semantic Analyzer')
+    else:
+        scope_tree.current_scope.has_return = True
 
 def analyze_closure(line_node):
     identifier = line_node.children1
@@ -492,13 +528,20 @@ def analyze_closure(line_node):
             var_name = getattr(arg_node, "children{}".format(i+1))
             input_names.append(var_name)
         function_type = func_type(args, return_type1)
-        scope_tree.create_scope()
+        scope_tree.add_variable(identifier, function_type, line)
+        scope_tree.create_scope('closure')
+        functions.push(function_type)
         for i in range(len(args)):
             scope_tree.add_variable(input_names[i], args[i], line)
         for i in range(6, line_node.num_child):
             in_line = getattr(line_node, "children{}".format(i))
             res = analyze_line(in_line) 
         scope_tree.close_scope()
+        functions.pop()
+        if function_type.outputs != 'void':
+            temp = check_return(scope_tree.current_scope)
+            if not temp:
+                error = Error(line, "Closure misses a return statement.", 'Semantic Analyzer')
     else:
         error_msg = "Type Mismatch in Closure statement '{}'.".format(return_type1,return_type2)
         error = Error(line, error_msg, 'Semantic Analyzer')
@@ -519,23 +562,24 @@ def analyze_function_call(line_node):
         match = analyze_expr(getattr(arg_node, "children{}".format(i)), func_type.inputs[i])
         if not match:
             error = Error(line, "The argument at position {} doesnt matches with the defination of the function".format(i), 'Semantic Analyzer')
+    return func_type.outputs
 
 
 def analyze_if(line_node):
     cond = line_node.children1
-    match = analyze_expr(cond,bool)
+    match = analyze_expr(cond.children0 , 'bool')
     if match:
-        scope_tree.create_scope()
+        scope_tree.create_scope('if')
         for i in range(2,line_node.num_child):
             line = getattr(line_node, "children{}".format(i))
             if isinstance(line,magar_temp):
                 scope_tree.close_scope()
-                scope_tree.create_scope()
+                scope_tree.create_scope('elif')
                 if (line.num_child==0):
                     continue
                 else:
                     cond = line.children1
-                    match2 = analyze_expr(cond,bool)
+                    match2 = analyze_expr(cond.children0,'bool')
                     if match2:
                         for i in range(2,line.num_child):
                             line2 = getattr(line, "children{}".format(i))
@@ -545,7 +589,7 @@ def analyze_if(line_node):
                         error_msg = "Type of expr given as elseif condition is not of boolean type '{}'.".format(cond)
                         error = Error(line.children0.line, error_msg, 'Semantic Analyzer')
             elif isinstance(line, nahitoh_temp):
-                scope_tree.create_scope()
+                scope_tree.create_scope('else')
                 for i in range(1,line.num_child):
                     line3 = getattr(line, "children{}".format(i))
                     analyze_line(line3)
@@ -557,12 +601,12 @@ def analyze_if(line_node):
         error = Error(line_node.children0.line, error_msg, 'Semantic Analyzer')
 
 def analyze_try(line_node):
-    scope_tree.create_scope()
+    scope_tree.create_scope('try')
     for i in range(1,line_node.num_child):
         line = getattr(line_node, "children{}".format(i))
         if isinstance(line,varna):
             scope_tree.close_scope()
-            scope_tree.create_scope()
+            scope_tree.create_scope('varna')
         else:
             res = analyze_line(line)
     scope_tree.close_scope()
@@ -595,6 +639,8 @@ def analyze_line(line_node):
         res = analyze_try(line_node)
     elif isinstance(line_node, closure):
         res = analyze_closure(line_node)
+    elif isinstance(line_node, return_func):
+        res = analyze_return(line_node)
     
 
 def analyze_program(node):

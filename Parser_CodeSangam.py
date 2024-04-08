@@ -76,7 +76,7 @@ et: LEFT_BRACE list_body RIGHT_BRACE
 
 all_e: e | ed | els | et
 
-data_types: NUM | STR | BOOL | DICT SPECIFIER_START data_types COMMA data_types SPECIFIER_END | LIST SPECIFIER_START data_types SPECIFIER_END | TUP SPECIFIER_START data_types SPECIFIER_END  
+data_types: NUM | STR | BOOL | DICT SPECIFIER_START data_types COMMA data_types SPECIFIER_END | LIST SPECIFIER_START data_types SPECIFIER_END | TUP SPECIFIER_START data_types SPECIFIER_END | VOID
 
 assignment: IDENTIFIER all_equal all_e| IDENTIFIER all_equal input | data_types IDENTIFIER EQUAL all_e | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE all_equal all_e | IDENTIFIER LEFT_SQUARE access_temp RIGHT_SQUARE all_equal input
 temp: NUMBER | STRING 
@@ -111,7 +111,7 @@ varna: VARNA COLON NEW_LINE INDENT line_temp DEDENT
 function: KARYA func_data_types IDENTIFIER LEFT_PAREN arguments RIGHT_PAREN COLON NEW_LINE INDENT line_temp DEDENT
 arguments: data_types COLON IDENTIFIER args |
 args: COMMA data_types COLON IDENTIFIER args |  
-func_data_types: data_types | VOID
+func_data_types: data_types 
 return_func: VAPAS return_type
 return_type: all_e | 
 

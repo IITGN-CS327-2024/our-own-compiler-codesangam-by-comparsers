@@ -307,10 +307,14 @@ class condition(ASTNode):
 class arguments(ASTNode):
     def __init__(self, children):
         self.num_child = 0
-        children = children[:1]+children[2:]
+        # children = children[:1]+children[2:]
+        k = 0
         for i, child in enumerate(children):
+            if i%3==1:
+                continue
             self.num_child+=1
-            setattr(self, f'children{i}', child)
+            setattr(self, f'children{k}', child)
+            k+=1
 
 class args(ASTNode):
     def __init__(self, children):

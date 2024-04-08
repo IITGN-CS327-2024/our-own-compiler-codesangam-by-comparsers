@@ -337,7 +337,7 @@ class OurTransformer(lark.Transformer):
             return None
         else:
             temp = len(children)
-            children = [children[i] for i in range(1, temp, 2)]
+            children = [children[i] for i in range(1, temp)]
             return children
     
     def func_data_types(self, children):
