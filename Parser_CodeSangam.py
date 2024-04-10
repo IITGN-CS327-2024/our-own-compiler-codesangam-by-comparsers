@@ -164,8 +164,8 @@ if __name__ == "__main__":
     if not has_error:
         transformer = OurTransformer()
         ast = transformer.transform(parse_tree)
-        analyze_program(ast)
         graph = tree_to_graphviz(ast)
         graph.render('ASTs/{}'.format(file_path[10:-11]),format='png', view=True)
+        analyze_program(ast)
         if (len(sys.argv)>=3):
             tree.pydot__tree_to_png( parse_tree, sys.argv[2])
