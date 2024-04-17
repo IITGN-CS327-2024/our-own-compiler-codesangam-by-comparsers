@@ -1,5 +1,6 @@
 karya void complierProject(bool: works, bool: hello, num: jk):
 	num grade = 0
+	list<num> a = [1, 0]
 	agar (Sahi):
 		grade = 11
 	nahitoh:
