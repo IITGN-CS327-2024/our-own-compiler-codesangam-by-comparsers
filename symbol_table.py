@@ -55,8 +55,9 @@ class dict_type:
         self.val_type = val_type
 
 class func_type:
-    def __init__(self, inputs, outputs):
+    def __init__(self, inputs, outputs, input_names):
         self.inputs = inputs
+        self.input_names = input_names
         self.outputs = outputs
 
 class Stack:
