@@ -1,12 +1,10 @@
-$$ Test program for loops and function in CodeSangam
+karya void complierProject(bool: works, bool: hello, num: jk):
+	num grade = 0
+	list<num> a = [1, 0]
+	agar (Sahi):
+		grade = 11
+	nahitoh:
+		grade = 9
+	vapas grade
 
-karya bool isPass(num:marks):
-    agar (marks > 80):
-        print("Pass")
-        vapas Sahi
-    magar (marks > 30 && marks <= 80):
-        print("Re-exam")
-        vapas Sahi
-    nahitoh:
-        print("Fail")
-        vapas Galat
+complierProject(Sahi, Sahi, 7)

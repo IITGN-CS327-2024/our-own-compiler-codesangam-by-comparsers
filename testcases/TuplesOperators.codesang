@@ -1,56 +1,44 @@
 $$ Test program for Tuple, Number, Logical, Bitwise, and String Operations in CodeSangam
 
-tup<str> t1 = {"abc", Galat, 79}
-tup<num> t2 = {12, 0, 79}
-
-karya num main():
-    $$ Tuple operations
-    num c = t1.count(1)
-    num element = t1.access(1)
-    num length = t1.len()
-
-    $$ Number operations
-    num x = 7
-    num y = 14
-    num res_add = y + 5
-    num res_multi = y * 2
-    num res_sub = y - 3
-    num res_div = y / 2
-    y += 1
-    num res_integer_divide = y // 2
-    num res_exponent = y ** 2
-    num res_remainder = y % 2
-    num res_pre_increment = ++y
-    num res_pre_decrement = --y
-    num res_post_increment = y++
-    num res_post_decrement = y--
+num y = 2
+$$$
+num res_add = y + 5
+num res_multi = y * 2
+num res_sub = y - 3
+num res_div = y / 2
+y += 1
+num res_integer_divide = y // 2
+num res_exponent = y ** 2
+num res_remainder = y % 2
+num res_pre_increment = ++y
+num res_pre_decrement = --y
+num res_post_increment = y++
+num res_post_decrement = y--
 
 
-    $$ Logical operations
-    num res_and = Galat && Sahi
-    num res_or = Galat || Sahi
-    num res_not = ~Galat
+$$ Logical operations
+bool res_and = Galat && Sahi
+bool res_or = Galat || Sahi
+bool res_not = ~Galat
 
-    $$ Bitwise operations
-    num res_bitwise_and = y & 3
-    num res_bitwise_or = y | 3
-    num res_bitwise_xor = y ^ 3
+$$ Bitwise operations
+num res_bitwise_and = y & 3
+num res_bitwise_or = y | 3
+num res_bitwise_xor = y ^ 3
 
-    $$ String operations
-    str a = "Hello"
-    str b = " World"
-    str res_concatenate = a + b
-    str res_slicing = a.slice(1:3)
+$$ String operations
+str a = "Hello"
+str b = " World"
+str res_concatenate = a + b
+str res_slicing = a.slice(1:3)
+$$$
+$$ Conditional operators
+num o1 = 5
+num o2 = 10
+bool less_than = o1 < o2
+bool greater_than = o1 > o2
+bool greater_than_equal = o1 >= o2
+bool less_than_equal = o1 <= o2
+bool is_equal = o1 == o2
+bool not_equal = o1 != o2
 
-    $$ Conditional operators
-    num o1 = 5
-    num o2 = 10
-    bool less_than = o1 < o2
-    bool greater_than = o1 > o2
-    bool greater_than_equal = o1 >= o2
-    bool less_than_equal = o1 <= o2
-    bool is_equal = o1 == o2
-    bool not_equal = o1 != o2
-
-
-    vapas 0

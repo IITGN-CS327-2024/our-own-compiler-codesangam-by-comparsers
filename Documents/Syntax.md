@@ -240,3 +240,9 @@ Logical operators (ol)
 
 Associativity :
 Left for all operators
+
+## Escape Sequences  
+\quotes : '"'  
+\single_quotes : "'"  
+\new_line: New Line  
+\tab : Tab Space  

@@ -1,32 +1,30 @@
 $$ Test program for Lists and Dictionary in CodeSangam 
 
 karya num main():
-    dict<num,num> d = \[1:2, 3:4, 5:6\]
-    dict<num,dict<num,num>> d2 = \[2:\[3:4, 4:5\], 0:\[1:2, 2:3\]\]
-    list<str> l = ["Disha", "Shubh", "Hirva", "Dhruv"]
+    list <num> a = [2,3,4]
+    list <str> p = ["a","b"]
+    num b = int(3)
+    dict<num,dict<num,num>> d = \[2:\[1:2\]\]
+    list <num> e = d.keys()
 
-    $$ Dictionary operations
-
-    d[3] = "Camel"
-    d[4] = 2346
-    k = d.keys()
-    a = d.pop(1)
-    values = d.val()
-    d3 = d.copy()
-    num numKeys = d.len()
-
-    $$ List operations
-    
-    a = l.append("str")
-    a =l.insert([0], 24)
-    l2 = ["Disha", "Shraddha"]
-    a =l.join(l2)
-    sumResult = sum(l)
-    listLen = l.len()
-    occurrences = l.count("Disha")
-    element = l.access(2)
-    sliced = l.slice(1:4)
-    a =l.pop(5)
+    bool f = Sahi
+    bool g = !3
+    num h = 2++
+    num i = a.len()
+    num j = d[4,5]
+    list <num> l = d.keys()
+    list <dict<num,num>> k = d.val()
+    dict <num,dict<num,num>> s = d.copy()
+    num m = int("234")
+    num n = sum(a)
+    num q = -20
+    num r = a.count(3) $$ here the validation for 1+2 is left
+    list <num> t = a.join(a)
+    t = a.join(a)
+    list <num> u = a.pop(34)
+    num v = 3 ** 8
+    list <num> w = a.insert([4],34)
+    list <num> x = a.slice(1:4)
 
     vapas 0
     
