@@ -5,6 +5,7 @@ from lark.lexer import Lexer, Token
 from AST_CodeSangam import *
 from graphviz import Digraph
 from Semantic_Analyzer import *
+from WAT_Generator import *
 from error_handling import *
 import traceback
 import re
@@ -166,6 +167,7 @@ if __name__ == "__main__":
         ast = transformer.transform(parse_tree)
         graph = tree_to_graphviz(ast)
         graph.render('ASTs/{}'.format(file_path[10:-11]),format='png', view=True)
-        analyze_program(ast)
+        scope_tree = analyze_program(ast)
+        convert_program(ast, scope_tree, file_path[10:-11])
         if (len(sys.argv)>=3):
             tree.pydot__tree_to_png( parse_tree, sys.argv[2])

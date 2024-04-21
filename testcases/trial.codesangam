@@ -1,10 +1,7 @@
-karya void complierProject(bool: works, bool: hello, num: jk):
-	num grade = 0
-	list<num> a = [1, 0]
-	agar (Sahi):
-		grade = 11
-	nahitoh:
-		grade = 9
-	vapas grade
+karya num add(num: a, num: b):
+	num ans = a + b
+	vapas ans
 
-complierProject(Sahi, Sahi, 7)
+karya num temp(num: a, num: b):
+	num ans = add(a, b)
+	vapas ans

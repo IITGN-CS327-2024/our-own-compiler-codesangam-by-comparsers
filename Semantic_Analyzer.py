@@ -456,7 +456,7 @@ def analyze_function(line_node):
         args.append(temp_type)
         var_name = getattr(arg_node, "children{}".format(i+1))
         input_names.append(var_name)
-    function_type = func_type(args, return_type)
+    function_type = func_type(args, return_type, input_names)
     scope_tree.add_variable(func_name, function_type, line)
     scope_tree.create_scope('function')
     functions.push(function_type)
@@ -632,3 +632,4 @@ def analyze_program(node):
     for i in range(node.num_child):
         line = getattr(node, "children{}".format(i))
         res = analyze_line(line)
+    return scope_tree
