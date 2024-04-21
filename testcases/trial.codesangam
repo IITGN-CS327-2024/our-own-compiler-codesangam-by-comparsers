@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 karya num add(num: a, num: b):
 	num ans = a + b
 	vapas ans
@@ -5,3 +6,17 @@ karya num add(num: a, num: b):
 karya num temp(num: a, num: b):
 	num ans = add(a, b)
 	vapas ans
+=======
+$$karya void complierProject(bool: works, bool: hello, num: jk):
+num grade = 0
+$$dict<num,list<num>> b = \[1:[2], 4:[4,5]\]
+list<num> a = [1]
+agar (Sahi):
+	grade = 11
+nahitoh:
+	grade = 9
+vapas grade
+
+$$complierProject(Sahi, Sahi, 7)
+$$children jab na ho tb 
+>>>>>>> ef6a0d90b110731b4facab5eafa359832c450104

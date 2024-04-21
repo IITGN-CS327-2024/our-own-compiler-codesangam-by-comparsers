@@ -16,8 +16,10 @@ functions = Stack()
 E = [e1,e2,e3,e4,e5,e6,e7,e8,e9]
 
 def type_checker(res_type, type):
+    if res_type=='any':
+        return True
     if isinstance(res_type,dict_type) and isinstance(type,dict_type):
-        if res_type.key_type==type.key_type:
+        if res_type.key_type==type.key_type or res_type.key_type=='any':
             return type_checker(res_type.val_type,type.val_type)
     elif isinstance(res_type,list_type) and isinstance(type,list_type):
         return type_checker(res_type.element_type,type.element_type)
@@ -25,8 +27,8 @@ def type_checker(res_type, type):
         return type_checker(res_type.element_type,type.element_type)
     else:
         if res_type==type:
-            return 1
-    return 0   
+            return True
+    return False  
 
 def find_in_e(node):
     if isinstance(node,e1):
@@ -56,13 +58,19 @@ def analyze_expr(node, type):
             if isinstance(node,function_call):
                 temp = analyze_function_call(node)
                 return (type_checker(temp, type))
+            elif isinstance(node,function):
+                print("hi")
+                temp = analyze_function(node)
+                return True
             enode = find_in_e(node.children0)
             if enode==True:
                 return analyze_expr(node.children0, type)
             elif isinstance(node.children0,expression):
                 return analyze_expr(node.children0,type) 
             else:
-                return type_checker(find_all_e_type(node.children0),type)
+                data_type = find_all_e_type(node.children0)
+                if (all_e_type_consistent(node.children0,data_type))==True:
+                    return type_checker(find_all_e_type(node.children0),type)
         elif num==2: 
             if isinstance(node.children0,ou):
                 return analyze_expr(node.children1,'num')
@@ -248,6 +256,36 @@ def find_return_type(node):
     return func_types.outputs
 
 
+def all_e_type_consistent(node, type):
+    if isinstance(type,list_type):
+        num_child = node.children0.num_child
+        # print(num_child)
+        for n in range(0,num_child):
+            # print(n)
+            childr = "children{}".format(n)
+            child = getattr(node.children0, childr)
+            print(child)
+            print(find_all_e_type(child),'hi')
+            print(type.element_type)
+            if type_checker(find_all_e_type(child),type.element_type)==0:
+                return False
+    elif isinstance(type, tup_type):
+        num_child = node.num_child
+        for n in range(num_child):
+            childr = "children{}".format(n)
+            child = getattr(node, childr)
+            if find_all_e_type(child)!=type.element_type:
+                return False 
+    elif isinstance(type,dict_type):
+        num_child = node.children0.num_child
+        for n in range(num_child):
+            childr = "children{}".format(n)
+            child = getattr(node.children0, childr)
+            if find_all_e_type(child.children0)!=type.key_type or find_all_e_type(child.children1)!=type.val_type:
+                return False
+    return True
+
+
 def find_all_e_type(node):
     type_list = []
     if isinstance(node,ASTNode):
@@ -266,26 +304,41 @@ def find_all_e_type(node):
             return scope_tree.type_variable(node)
     while (num>0):
         if isinstance(node,els):
-            node = node.children0.children0
-            if isinstance(node,ASTNode):
-                num = node.num_child
-            type_list.append('els')
+            try:
+                node = node.children0.children0
+                if isinstance(node,ASTNode):
+                    num = node.num_child
+                type_list.append('els')
+            except:
+                num = 0
+                type_list.append('els')
+                type_list.append('any')
         elif isinstance(node,ed):
-            node = node.children0.children0
-            k = None
-            if node.children0.type=='NUMBER':          
-                k = 'num'
-            else:
-                k = 'str'
-            if isinstance(node,ASTNode):
-                num = node.num_child
-                node = node.children1
-            type_list.append(['ed',k])
+            try:
+                node = node.children0.children0
+                k = None
+                if node.children0.type=='NUMBER':          
+                    k = 'num'
+                else:
+                    k = 'str'
+                if isinstance(node,ASTNode):
+                    num = node.num_child
+                    node = node.children1
+                type_list.append(['ed',k])
+            except:
+                num = 0
+                k = "any"
+                type_list.append(['ed',k])
+                type_list.append('any')
         elif isinstance(node,et):
-            node = node.children0.children0
-            if isinstance(node,ASTNode):
-                num = node.num_child
-            type_list.append('et')
+            try:
+                node = node.children0.children0
+                if isinstance(node,ASTNode):
+                    num = node.num_child
+                type_list.append('et')
+            except:
+                type_list.append('et')
+                type_list.append('any')
         elif isinstance(node,function_call):
             return find_return_type(node)
         elif node.type=='NUMBER':
