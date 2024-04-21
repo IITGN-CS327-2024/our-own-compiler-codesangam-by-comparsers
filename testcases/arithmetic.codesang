@@ -1,19 +1,19 @@
 karya num add(num: p0, num: p1):
-  $$ Adds two integers and returns the result.
+  $$ Adds two integers and vapass the result.
   vapas p0 + p1
 
 karya num sub(num: p0, num: p1):
-  $$ Subtracts two integers and returns the result.
-  return p0 - p1
+  $$ Subtracts two integers and vapass the result.
+  vapas p0 - p1
 
 karya num mul(num: p0, num: p1):
-  $$ Multiplies two integers and returns the result.
-  return p0 * p1
+  $$ Multiplies two integers and vapass the result.
+  vapas p0 * p1
 
 karya num div(num: p0, num: p1):
-  $$ Divides two integers (signed division) and returns the result.
-  return p0 / p1
+  $$ Divides two integers (signed division) and vapass the result.
+  vapas p0 / p1
 
 karya num mod(num: p0, num: p1):
-  $$ Calculates the remainder of dividing two integers (signed remainder) and returns the result.
-  return p0 % p1
+  $$ Calculates the remainder of dividing two integers (signed remainder) and vapass the result.
+  vapas p0 % p1
