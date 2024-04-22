@@ -1,5 +1,6 @@
 (module
-	(func $store (param $value i32) (param $address i32)
+	(memory (export "memory") 1)
+    (func $store (param $value i32) (param $address i32)
         ;; Store the value at the specified address in memory
         (i32.store (local.get $address) (local.get $value))
     )
@@ -14,6 +15,10 @@
 		(param $p2 i32)
 		(local $i i32)
 		(local $temp i32)
+		local.get $p1
+		i32.const 1
+		i32.add
+		local.set $p1
 		i32.const 0
 		local.set $i
 		loop
@@ -26,6 +31,8 @@
 			i32.const 4
 			i32.mul
 			i32.add
+			i32.const 4
+			i32.sub
 			call $load
 			local.set $temp
 			local.get $temp
@@ -34,17 +41,20 @@
 			i32.const 26
 			i32.rem_u
 			local.set $temp
+			local.get $temp
 			local.get $p0
 			local.get $i
 			i32.const 4
 			i32.mul
 			i32.add
-			local.get $temp
+			i32.const 4
+			i32.sub
 			call $store
 			local.get $i
 			local.get $p1
 			i32.lt_s
 			br_if 0
+			end
 	)
 	(func $caesarDecrypt (export "caesarDecrypt")
 		(param $p0 i32)
@@ -52,6 +62,10 @@
 		(param $p2 i32)
 		(local $i i32)
 		(local $temp i32)
+		local.get $p1
+		i32.const 1
+		i32.add
+		local.set $p1
 		i32.const 0
 		local.set $i
 		loop
@@ -64,17 +78,22 @@
 			i32.const 4
 			i32.mul
 			i32.add
+			i32.const 4
+			i32.sub
 			call $load
 			local.set $temp
 			local.get $temp
 			local.get $p2
 			i32.sub
 			local.set $temp
-			(if $I0 (
 			local.get $temp
 			i32.const 0
 			i32.lt_s
-				) (then 
+			(if 
+				(then 
+				i32.const 1
+				i32.const -1
+				i32.mul
 				local.get $temp
 				i32.mul
 				local.set $temp
@@ -86,16 +105,19 @@
 			i32.const 26
 			i32.rem_u
 			local.set $temp
+			local.get $temp
 			local.get $p0
 			local.get $i
 			i32.const 4
 			i32.mul
 			i32.add
-			local.get $temp
+			i32.const 4
+			i32.sub
 			call $store
 			local.get $i
 			local.get $p1
 			i32.lt_s
 			br_if 0
+			end
 	)
 )

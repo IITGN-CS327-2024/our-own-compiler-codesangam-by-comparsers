@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 (async () => {
-    const bytes = fs.readFileSync(path.join(__dirname, 'wasm', 'sort.wasm'));
+    const bytes = fs.readFileSync(path.join(__dirname, 'wasm', 'So.wasm'));
     let wasm = await WebAssembly.instantiate(new Uint8Array(bytes));
     const { memory, sort } = wasm.instance.exports;
     function fillArrayWithRandomValues(array, minValue, maxValue) {

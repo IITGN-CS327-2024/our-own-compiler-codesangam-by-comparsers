@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 (async () => {
-    const file = await fs.promises.readFile(path.join(__dirname, 'wasm', 'caesar.wasm'));
+    const file = await fs.promises.readFile(path.join(__dirname, 'wasm', 'Caes.wasm'));
     const wasm = await WebAssembly.instantiate(file);
     const { memory, caesarEncrypt, caesarDecrypt } = wasm.instance.exports;
 

@@ -22,7 +22,7 @@ def find_in_e(node):
     return False
 
 def convert_expression(node, indent, file):
-    print(node)
+    # print(node)
     enode = find_in_e(node)
     if enode==True:
         if isinstance(node,e3):
@@ -89,15 +89,16 @@ def convert_expression(node, indent, file):
                 file.write("\t"*indent +"i32.const 1\n")
                 file.write("\t"*indent+"i32.add\n")
         elif isinstance(node,e9):
+            # print(node.children0,"hirva")
             if node.num_child==1:
                 convert_expression(node.children0,indent,file)
             elif node.num_child==2:
-                if node.children0=="MINUS":
+                if node.children0.type=="MINUS":
                     convert_expression(node.children1,indent,file)
                     file.write("\t"*indent+"i32.const -1\n")
                     file.write("\t"*indent+"i32.mul\n")
     elif isinstance(node,function_call):
-        print("hi")
+        # print("hi")
         convert_func_call(node,indent,file)
     elif node.type=="NUMBER":
         num_i = node
@@ -164,7 +165,6 @@ def convert_func_call(line_node, indent, file):
     file.write("\t"*indent + "call ${}\n".format(line_node.children0))
 
 def convert_ifelse(line_node, indent, scope_tree, file, func_num):
-    file.write("\t"*indent + "(if $I0 (\n")
     expr = line_node.children1.children0.children0.children0
     convert_expression(expr,indent,file)
     expr = line_node.children1.children0.children0.children2
@@ -182,8 +182,9 @@ def convert_ifelse(line_node, indent, scope_tree, file, func_num):
         file.write("\t"*indent +"i32.ne"+"\n")
     elif comp.type=="EQUAL_EQUAL":
         file.write("\t"*indent +"i32.eq"+"\n")  
+    file.write("\t"*indent + "(if \n")
     indent+=1
-    file.write("\t"*indent + ") (then \n")
+    file.write("\t"*indent + "(then \n")
     j = line_node.num_child-1
     for i in range(2,line_node.num_child):
         line = getattr(line_node, "children{}".format(i))
@@ -237,6 +238,7 @@ def convert_loop(node, indent, file, scope_tree, func_num):
     elif comp.type=="EQUAL_EQUAL":
         file.write("\t"*indent +"i32.eq"+"\n")   
     file.write("\t"*indent + "br_if 0"+"\n")
+    file.write("\t"*indent + "end"+"\n")
 
 def convert_line(line_node, scope_tree, file, indent, func_num):
     if isinstance(line_node, assignment):
@@ -260,7 +262,8 @@ def convert_program(node, scope_tree, file_name):
     with open('WAT_Code/{}.wat'.format(file_name), 'w') as file:
         file.write("(module\n")
         file.write(
-'''\t(func $store (param $value i32) (param $address i32)
+'''\t(memory (export "memory") 1)
+    (func $store (param $value i32) (param $address i32)
         ;; Store the value at the specified address in memory
         (i32.store (local.get $address) (local.get $value))
     )
