@@ -39,7 +39,7 @@
 			local.get $p2
 			i32.add
 			i32.const 26
-			i32.rem_u
+			i32.rem_s
 			local.set $temp
 			local.get $temp
 			local.get $p0
@@ -103,7 +103,7 @@
 			)
 			local.get $temp
 			i32.const 26
-			i32.rem_u
+			i32.rem_s
 			local.set $temp
 			local.get $temp
 			local.get $p0

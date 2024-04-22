@@ -1,10 +1,10 @@
 (module
-	(func $store_value_at_address (param $value i32) (param $address i32)
+	(memory (export "memory") 1)
+    (func $store (param $value i32) (param $address i32)
         ;; Store the value at the specified address in memory
         (i32.store (local.get $address) (local.get $value))
     )
-
-    (func $loadValueFromMemory (param $address i32) (result i32)
+    (func $load (param $address i32) (result i32)
         (i32.load
         (local.get $address)  ;; Load value from specified address
         )
@@ -42,7 +42,7 @@
 		(result i32)
 		local.get $p0
 		local.get $p1
-		i32.div_u
+		i32.div_s
 		return
 	)
 	(func $mod (export "mod")
@@ -51,7 +51,7 @@
 		(result i32)
 		local.get $p0
 		local.get $p1
-		i32.rem_u
+		i32.rem_s
 		return
 	)
 )

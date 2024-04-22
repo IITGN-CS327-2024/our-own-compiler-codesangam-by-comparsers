@@ -71,9 +71,9 @@ def convert_expression(node, indent, file):
                 if node.children1.children0.type=="MULT":
                     file.write("\t"*indent+"i32.mul\n")
                 elif node.children1.children0.type=="DIV":
-                    file.write("\t"*indent+"i32.div_u\n")
+                    file.write("\t"*indent+"i32.div_s\n")
                 elif node.children1.children0.type=="MODULO":
-                    file.write("\t"*indent+"i32.rem_u\n")
+                    file.write("\t"*indent+"i32.rem_s\n")
         elif isinstance(node,e8):
             var1 = node.children0
             enode = find_in_e(var1)
@@ -143,7 +143,7 @@ def convert_assignment(line_node, indent, file):
     elif line_node.children1.children0 == '/=':
         file.write("\t"*indent + "local.get ${}\n".format(var_name))
         expression_value = convert_expression(line_node.children2.children0, indent, file)
-        file.write("\t"*indent+"i32.div_u\n")
+        file.write("\t"*indent+"i32.div_s\n")
     file.write("\t"*indent + "local.set ${}\n".format(var_name))
 
 def convert_declaration(line_node, indent, file):
