@@ -5,3 +5,5 @@ karya num add(num: p0, num: p1):
 karya num sub(num: p0, num: p1):
   $$ Subtracts two integers and returns the result.
   vapas p0 - p1
+
+sub(0, 1)

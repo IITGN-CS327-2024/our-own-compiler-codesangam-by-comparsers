@@ -8,7 +8,7 @@ const assert = require('node:assert');
 
 (async () => {
     // Load the WASM file and instantiate it.
-    const bytes = fs.readFileSync(path.join(__dirname, 'wasm', 'arthimetic.wasm'));
+    const bytes = fs.readFileSync(path.join(__dirname, 'wasm', 'arithmet.wasm'));
     let obj = await WebAssembly.instantiate(new Uint8Array(bytes));
 
     const a = 1;
