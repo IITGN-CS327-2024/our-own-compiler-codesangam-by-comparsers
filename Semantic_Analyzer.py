@@ -591,8 +591,6 @@ def analyze_function_call(line_node):
     line = func_name.line
     arg_node = line_node.children1
     func_type = scope_tree.type_variable(func_name)
-    if func_name=="store" or func_name=="load":
-        return
     if func_type==-1:
         error = Error(line, "Function called before defining it.", 'Semantic Analyzer')
     if arg_node.num_child > len(func_type.inputs):
@@ -685,6 +683,10 @@ def analyze_line(line_node):
     
 
 def analyze_program(node):
+    func_type_ = func_type(['num', 'num'], 'void', ['value', 'address'])
+    scope_tree.add_variable('store', func_type_, -1)
+    func_type_ = func_type(['num'], 'num', ['address'])
+    scope_tree.add_variable('load', func_type_, -1)
     for i in range(node.num_child):
         line = getattr(node, "children{}".format(i))
         res = analyze_line(line)

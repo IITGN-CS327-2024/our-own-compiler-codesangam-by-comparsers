@@ -11,8 +11,8 @@ const assert = require('node:assert');
     const bytes = fs.readFileSync(path.join(__dirname, 'wasm', 'arithmet.wasm'));
     let obj = await WebAssembly.instantiate(new Uint8Array(bytes));
 
-    const a = 1;
-    const b = 8;
+    const a = -2;
+    const b = 3;
     let result = obj.instance.exports.add(a, b);
     console.log(`${a} + ${b} = ${result}`);
     assert.equal(result, a + b);

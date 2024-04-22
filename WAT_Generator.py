@@ -2,11 +2,13 @@ from ast_classes import *
 from symbol_table import *
 from error_handling import *
 
-def write_local_vars(node, file, indent):
+def write_local_vars(node, file, indent, input_names):
     for key in list(node.table.keys()):
-        file.write("\t"*indent + "local ${} i32".format(key))
-    for child in node.children():
-        write_local_vars(child, file, indent)
+        if key in input_names:
+            continue
+        file.write("\t"*indent + "(local ${} i32)\n".format(key))
+    for child in node.children:
+        write_local_vars(child, file, indent, input_names)
 
 def find_in_e(node):
     if isinstance(node,e3):
@@ -16,24 +18,34 @@ def find_in_e(node):
     return False
 
 def convert_expression(node, indent, file):
-    enode = find_in_e(node.children0)
+    enode = find_in_e(node)
     if enode==True:
-        if isinstance(node.children0,e3):
-            node = node.children0
+        if isinstance(node,e3):
             var1 = node.children0
-            file.write("\t"*indent+"local.get ${}".format(var1)+"\n")
+            if var1.type=="IDENTIFIER":
+                file.write("\t"*indent+"local.get ${}".format(var1)+"\n")
+            else:
+                file.write("\t"*indent +"i32.const {}".format(var1)+"\n")
             var2 = node.children2
-            file.write("\t"*indent+"local.get ${}".format(var2)+"\n")
+            if var2.type=="IDENTIFIER":
+                file.write("\t"*indent+"local.get ${}".format(var2)+"\n")
+            else:
+                file.write("\t"*indent +"i32.const {}".format(var2)+"\n")
             if node.children1.type=="PLUS":
                 file.write("\t"*indent+"i32.add\n")
             elif node.children1.type=="MINUS":
                 file.write("\t"*indent+"i32.sub\n")
-        elif isinstance(node.children0,e4):
-            node = node.children0
+        elif isinstance(node,e4):
             var1= node.children0
-            file.write("\t"*indent+"local.get ${}".format(var1)+"\n")
+            if var1.type=="IDENTIFIER":
+                file.write("\t"*indent+"local.get ${}".format(var1)+"\n")
+            else:
+                file.write("\t"*indent +"i32.const {}".format(var1)+"\n")
             var2 = node.children2
-            file.write("\t"*indent+"local.get ${}".format(var2)+"\n")
+            if var2.type=="IDENTIFIER":
+                file.write("\t"*indent+"local.get ${}".format(var2)+"\n")
+            else:
+                file.write("\t"*indent +"i32.const {}".format(var2)+"\n")
             if isinstance(node.children1,ob):
                 if node.children1.children0.type=="MULT":
                     file.write("\t"*indent+"i32.mul\n")
@@ -41,6 +53,24 @@ def convert_expression(node, indent, file):
                     file.write("\t"*indent+"i32.div_u\n")
                 elif node.children1.children0.type=="MODULO":
                     file.write("\t"*indent+"i32.rem_u\n")
+        elif isinstance(node,e8):
+            var1 = node.children0
+            if var1.type=="IDENTIFIER":
+                file.write("\t"*indent+"local.get ${}".format(var1)+"\n")
+            else:
+                file.write("\t"*indent +"i32.const {}".format(var1)+"\n")
+            op = node.children1
+            if op.type=="PLUS_PLUS":
+                file.write("\t"*indent +"i32.const 1\n")
+                file.write("\t"*indent+"i32.add\n")
+    elif isinstance(node,function_call):
+        convert_func_call(node,indent,file)
+    elif node.type=="NUMBER":
+        num_i = node
+        file.write("\t"*indent+"i32.const {}".format(num_i)+"\n")
+    elif node.type=="IDENTIFIER":
+        id = node
+        file.write("\t"*indent+"local.get ${}".format(id)+"\n")
 
 def convert_function(line_node, scope_tree, file, indent, func_num):
     file.write("\t"*indent + '(func ${} (export "{}")\n'.format(line_node.children2, line_node.children2))
@@ -52,39 +82,107 @@ def convert_function(line_node, scope_tree, file, indent, func_num):
     if func_type.outputs.value!='void':
         file.write("\t"*indent + "(result i32)\n")
     func_node = scope_tree.root.children[func_num]
-    # write_local_vars(func_node, file, indent)
+    write_local_vars(func_node, file, indent, func_type.input_names)
     for i in range(4, line_node.num_child):
         in_line = getattr(line_node, "children{}".format(i))
         convert_line(in_line, scope_tree, file, indent, func_num)
     file.write("\t"*(indent-1) + ")\n")
 
 def convert_assignment(line_node, indent, file):
-    expression_value = convert_expression(line_node.children2, indent, file)
     var_name = line_node.children0
     if line_node.children1 == '=':
-        file.write("\t"*indent + "local.set ${}".format(var_name))
+        expression_value = convert_expression(line_node.children2.children0, indent, file)
+    elif line_node.children1 =='+=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children2.children0, indent, file)
+        file.write("\t"*indent+"i32.add\n")
+    elif line_node.children1 == '-=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children2.children0, indent, file)
+        file.write("\t"*indent+"i32.sub\n")
+    elif line_node.children1 == '*=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children2.children0, indent, file)
+        file.write("\t"*indent+"i32.mul\n")
+    elif line_node.children1 == '/=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children2.children0, indent, file)
+        file.write("\t"*indent+"i32.div_u\n")
+    file.write("\t"*indent + "local.set ${}\n".format(var_name))
 
 def convert_declaration(line_node, indent, file):
-    expression_value = convert_expression(line_node.children3, indent, file)
     var_name = line_node.children1
     if line_node.children2 == '=':
-        file.write("\t"*indent + "local.set ${}".format(var_name))
+        expression_value = convert_expression(line_node.children3.children0, indent, file)
+    elif line_node.children2 =='+=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children3.children0, indent, file)
+        file.write("\t"*indent+"i32.add\n")
+    elif line_node.children2 == '-=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children3.children0, indent, file)
+        file.write("\t"*indent+"i32.sub\n")
+    elif line_node.children2 == '*=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children3.children0, indent, file)
+        file.write("\t"*indent+"i32.mul\n")
+    elif line_node.children2 == '/=':
+        file.write("\t"*indent + "local.get ${}\n".format(var_name))
+        expression_value = convert_expression(line_node.children3.children0, indent, file)
+        file.write("\t"*indent+"i32.div_u\n")
+    file.write("\t"*indent + "local.set ${}\n".format(var_name))
 
 def convert_return(line_node, indent, file):
-    expression_value = convert_expression(line_node.children1, indent, file)
+    expression_value = convert_expression(line_node.children1.children0, indent, file)
     file.write("\t"*indent+"return\n")
 
 def convert_func_call(line_node, indent, file):
     args = line_node.children1
     for i in range(args.num_child):
         arg = getattr(line_node, "children{}".format(i))
-        value = convert_expression(arg, indent, file)
+        value = convert_expression(arg.children0, indent, file)
     file.write("call ${}".format(line_node.children0))
 
-def convert_if_else(line_node, indent, file):
+def convert_ifelse(line_node, indent, file):
+    return
 
-def convert_loop(line_node, indent, file):
-    file.write("\t"*indent + "loop")
+def convert_loop(node, indent, file, scope_tree, func_num):
+    file.write("\t"*indent + "loop\n")
+    indent+=1
+    var_i = node.children1.children1
+    file.write("\t"*indent +"local.get ${}".format(var_i)+"\n")
+    var_ini = node.children1.children3.children0
+    if var_ini.type=="IDENTIFIER":
+        file.write("\t"*indent +"local.get ${}".format(var_ini)+"\n")
+    else:
+        file.write("\t"*indent +"i32 const {}".format(var_ini)+"\n")
+    file.write("\t"*indent +"i32.add "+"\n")
+    file.write("\t"*indent +"local.set ${}".format(var_i)+"\n")
+    # file.write("\t"*indent +"call $log"+"\n")
+    for i in range(4, node.num_child):
+        in_line = getattr(node, "children{}".format(i))
+        value = convert_line(in_line, scope_tree, file, indent, func_num)
+    var_c = node.children2.children0.children0.children0
+    file.write("\t"*indent +"local.get ${}".format(var_i)+"\n")
+    var_ini = node.children2.children0.children0.children2.children0
+    if var_ini.type=="IDENTIFIER":
+        file.write("\t"*indent +"local.get ${}".format(var_ini)+"\n")
+    else:
+        file.write("\t"*indent +"i32 const {}".format(var_ini)+"\n")
+    comp = node.children2.children0.children0.children1
+    if comp.type=="LESS_EQUAL":
+        file.write("\t"*indent +"i32.le_s"+"\n")
+    elif comp.type=="GREATER_EQUAL":
+        file.write("\t"*indent +"i32.ge_s"+"\n") 
+    elif comp.type=="GREATER":
+        file.write("\t"*indent +"i32.gt_s"+"\n")
+    elif comp.type=="LESS":
+        file.write("\t"*indent +"i32.lt_s"+"\n")
+    elif comp.type=="BANG_EQUAL":
+        file.write("\t"*indent +"i32.ne"+"\n")
+    elif comp.type=="EQUAL_EQUAL":
+        file.write("\t"*indent +"i32.eq"+"\n")   
+    file.write("\t"*indent + "br_if 0"+"\n")
 
 def convert_line(line_node, scope_tree, file, indent, func_num):
     if isinstance(line_node, assignment):
@@ -96,6 +194,8 @@ def convert_line(line_node, scope_tree, file, indent, func_num):
         func_num+=1
     elif isinstance(line_node, return_func):
         convert_return (line_node, indent, file)
+    elif isinstance(line_node, for_loop):
+        convert_loop(line_node, indent, file, scope_tree, func_num)
     elif isinstance(line_node, ifelse):
         convert_ifelse(line_node, indent, file)
 
@@ -108,7 +208,6 @@ def convert_program(node, scope_tree, file_name):
         ;; Store the value at the specified address in memory
         (i32.store (local.get $address) (local.get $value))
     )
-
     (func $load (param $address i32) (result i32)
         (i32.load
         (local.get $address)  ;; Load value from specified address
