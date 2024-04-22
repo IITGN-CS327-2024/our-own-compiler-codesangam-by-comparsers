@@ -3,9 +3,9 @@ karya void sort(num: p0, num: p1):
     num temp2=0
     keliye (num i=0; i<p1-1; i++):
         keliye (num j=0; j<p1-1; j++):
-            temp1 = load(p0 + 4*i)
-            temp2 = load(p0 + 4*i + 4)
+            temp1 = load(p0 + 4*j)
+            temp2 = load(p0 + 4*j + 4)
             agar (temp1>temp2):
-                store(p0 + 4*i + 4, temp1)
-                store(p0 + 4*i, temp2)
+                store(p0 + 4*j + 4, temp1)
+                store(p0 + 4*j, temp2)
             
