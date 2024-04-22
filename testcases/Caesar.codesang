@@ -1,15 +1,17 @@
 karya void caesarEncrypt(num: p0, num: p1, num: p2):
-  keliye (num i=0; i<p1; i++) {
+  keliye (num i=0; i<p1; i++) :
     num temp = load(p0 + i*4)
     temp = (temp + p2) % 26
     store(p0 + i*4, temp)
-  }
-}
 
 karya void caesarDecrypt(num: p0, num: p1, num: p2):
-  keliye (num i=0; i<p1; i++) {
+  keliye (num i=0; i<p1; i++):
     num temp = load(p0 + i*4)
-    temp = (temp - p2) % 26
+    temp = (temp - p2)
+    agar (temp<0):
+      temp=-1*temp
+    nahitoh:
+      $$ Do nothing
+    temp = temp % 26
     store(p0 + i*4, temp)
-  }
-}
+  
