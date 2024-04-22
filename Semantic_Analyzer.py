@@ -53,6 +53,7 @@ def find_in_e(node):
 
 def analyze_expr(node, type):
     if isinstance(node,ASTNode):
+
         num = node.num_child
         if num==1:
             if isinstance(node,function_call):
@@ -590,6 +591,8 @@ def analyze_function_call(line_node):
     line = func_name.line
     arg_node = line_node.children1
     func_type = scope_tree.type_variable(func_name)
+    if func_name=="store" or func_name=="load":
+        return
     if func_type==-1:
         error = Error(line, "Function called before defining it.", 'Semantic Analyzer')
     if arg_node.num_child > len(func_type.inputs):

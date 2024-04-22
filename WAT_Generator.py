@@ -2,7 +2,11 @@ from ast_classes import *
 from symbol_table import *
 from error_handling import *
 
-# def write_local_vars(node, file, indent):
+def write_local_vars(node, file, indent):
+    for key in list(node.table.keys()):
+        file.write("\t"*indent + "local ${} i32".format(key))
+    for child in node.children():
+        write_local_vars(child, file, indent)
 
 def find_in_e(node):
     if isinstance(node,e3):
@@ -35,8 +39,8 @@ def convert_expression(node, indent, file):
                     file.write("\t"*indent+"i32.mul\n")
                 elif node.children1.children0.type=="DIV":
                     file.write("\t"*indent+"i32.div_u\n")
-                elif node.children1.children0.type=="DIV":
-                    file.write("\t"*indent+"i32.rem\n")
+                elif node.children1.children0.type=="MODULO":
+                    file.write("\t"*indent+"i32.rem_u\n")
 
 def convert_function(line_node, scope_tree, file, indent, func_num):
     file.write("\t"*indent + '(func ${} (export "{}")\n'.format(line_node.children2, line_node.children2))
@@ -70,10 +74,17 @@ def convert_return(line_node, indent, file):
     expression_value = convert_expression(line_node.children1, indent, file)
     file.write("\t"*indent+"return\n")
 
+def convert_func_call(line_node, indent, file):
+    args = line_node.children1
+    for i in range(args.num_child):
+        arg = getattr(line_node, "children{}".format(i))
+        value = convert_expression(arg, indent, file)
+    file.write("call ${}".format(line_node.children0))
+
+def convert_if_else(line_node, indent, file):
+
 def convert_loop(line_node, indent, file):
     file.write("\t"*indent + "loop")
-
-    file.write("\t"*indent + "end")
 
 def convert_line(line_node, scope_tree, file, indent, func_num):
     if isinstance(line_node, assignment):
@@ -85,11 +96,24 @@ def convert_line(line_node, scope_tree, file, indent, func_num):
         func_num+=1
     elif isinstance(line_node, return_func):
         convert_return (line_node, indent, file)
+    elif isinstance(line_node, ifelse):
+        convert_ifelse(line_node, indent, file)
 
 def convert_program(node, scope_tree, file_name):
     func_num = 0
     with open('WAT_Code/{}.wat'.format(file_name), 'w') as file:
         file.write("(module\n")
+        file.write(
+'''\t(func $store (param $value i32) (param $address i32)
+        ;; Store the value at the specified address in memory
+        (i32.store (local.get $address) (local.get $value))
+    )
+
+    (func $load (param $address i32) (result i32)
+        (i32.load
+        (local.get $address)  ;; Load value from specified address
+        )
+    )\n''')
         for i in range(node.num_child):
             line = getattr(node, "children{}".format(i))
             convert_line(line, scope_tree, file, 1, func_num)
