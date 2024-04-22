@@ -81,7 +81,28 @@ def convert_func_call(line_node, indent, file):
         value = convert_expression(arg, indent, file)
     file.write("call ${}".format(line_node.children0))
 
-def convert_if_else(line_node, indent, file):
+def convert_if(line_node, indent, scope_tree, file, func_num):
+    file.write("\t"*indent + "(if $I0 (\n")
+    condition = line_node.children1
+    exp = condition.children0
+    convert_expression(exp, indent+1, file)
+    file.write("\t"*indent+1 + ") (then \n")
+    j = line_node.num_child-1
+    for i in range(2,line_node.num_child):
+        line = getattr(line_node, "children{}".format(i))
+        if isinstance(line , magar_temp):
+            break
+        else:
+            convert_line(line, scope_tree, file, indent+1, func_num)
+    line = getattr(line_node, "children{}".format(line_node.num_child - 1))
+    file.write("\t"*indent+1 + ")\n")
+    if (line.num_child!=0):
+        file.write("\t"*indent+1 + "(else\n")
+        for i in range(1,line.num_child):
+            line_ = getattr(line, "children{}".format(i))
+            convert_line(line_, scope_tree, file, indent+2, func_num)
+        file.write("\t"*indent+1 + ")\n")
+    file.write("\t"*indent + ")\n")
 
 def convert_loop(line_node, indent, file):
     file.write("\t"*indent + "loop")
@@ -97,7 +118,7 @@ def convert_line(line_node, scope_tree, file, indent, func_num):
     elif isinstance(line_node, return_func):
         convert_return (line_node, indent, file)
     elif isinstance(line_node, ifelse):
-        convert_ifelse(line_node, indent, file)
+        convert_if(line_node, indent, scope_tree, file, func_num)
 
 def convert_program(node, scope_tree, file_name):
     func_num = 0
