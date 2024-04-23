@@ -21,17 +21,19 @@ This file has the code for the parser that uses Lark LALR parser to for the tree
   
 Run The following command to use the Parser_CodeSangam.py to parse the code and see the tree: `python Parser_CodeSangam.py <file_path>`.  
   
-In order to generate the tree pictorial representation use the following command where the image_file_path is the location you want to save the tree image: `python Parser_CodeSangam.py <file_path> <image_file_path>`. 
+In order to generate the tree pictorial representation, use the following command where the image_file_path is the location you want to save the tree image: `python Parser_CodeSangam.py <file_path> <image_file_path>`. 
     
 The images of the test cases have been stored in the folder `Parse_Trees`.
 
 ## AST_CodeSangam.py
-This file has code for AST generation from the parse tree. However, we call the contents of this file now in Parser_Codesangam.py itself, so no need to run any other file.
+This file has code for AST generation from the parse tree. However, we call the contents of this file now in Parser_Codesangam.py itself, so there is no need to run any other file.
 
-You can just run the following command to classify the generate AST: `python Parser_CodeSangam.py <file_path>`.  (NOTE: with progressing assignments we are not printing the generated AST with this command, but it is still being utilised in this command)
+You can just run the following command to generate the AST: `python Parser_CodeSangam.py <file_path>`.  (With progressing assignments, we are not printing the generated AST with this command, but it is still being utilised in this command)
 
 ## Semantic_Analyzer.py
-This file has code for semantic analysis of the generated AST and for returning the scope tree after analyzing and type checking. However, we call the contents of this file also now in Parser_Codesangam.py itself, so no need to run any other file. (NOTE: We are not printing the scope_tree currently, if you wish to see its output add a print statement after analyze statement called in Parser_Codesangam file)
+This file has code for semantic analysis of the generated AST and for returning the scope tree after analyzing and type checking. However, we call the contents of this file also now in Parser_Codesangam.py itself, so no need to run any other file. (We are not printing the scope_tree currently; if you wish to see its output, add a print statement after analyze statement called in Parser_Codesangam file)
+
+Note: We have stopped considering let statements from this step onwards.
 
 ## WAT_Generator.py
 This is the final code for our compiler to generate Web Assembly Text (WAT) code. We are calling its convert_program function to generate WAT code in the Parser_Codesangam.py file itself, so it is the only file you need to run to compile your test cases.
