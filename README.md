@@ -39,3 +39,5 @@ This is the final code for our compiler to generate Web Assembly Text (WAT) code
 Run The following command to compile the code completely and generate WAT code for it: `python Parser_CodeSangam.py <file_path>`.
 
 The above command saves the WAT code in the WAT_code folder. You can generate wasm code from this WAT code using wat2wasm functionality in [wabt](https://github.com/WebAssembly/wabt). You first need to build their tools then you can run the command `bin/wat2wasm <testfile>.wat -o <outputfile>.wasm`.
+
+NOTE: The question folder contains some test wasm codes generated using above method and some javascript files to test the codes, do check them out.
